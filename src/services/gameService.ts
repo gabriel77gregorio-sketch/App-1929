@@ -75,6 +75,71 @@ export const gameService = {
   },
 
   // ----------------------------------------------------------------------------
+  // 1.1 Criação do Personagem com Primeiro Negócio e Onboarding Completo
+  // ----------------------------------------------------------------------------
+  createCharacterWithFirstBusiness(
+    name: string, 
+    nickname: string, 
+    origin: string, 
+    style: CharacterStyle,
+    firstBusinessName: string,
+    firstDistrictId: string
+  ): { character: Character; business: PlayerBusiness } {
+    const newChar = this.createCharacter(name, nickname, origin, style);
+    
+    // Adiciona o primeiro negócio de herança/chegada
+    const btype = INITIAL_BUSINESS_TYPES[0]; // Bar de Esquina
+    const district = INITIAL_DISTRICTS.find(d => d.id === firstDistrictId) || INITIAL_DISTRICTS[0];
+    
+    const bizName = firstBusinessName.trim() || `Bar ${nickname}`;
+    const initialRevenue = btype.base_revenue * (style === 'empresario' ? 1.15 : 1);
+
+    const firstBiz: PlayerBusiness = {
+      id: 'biz-' + Date.now(),
+      character_id: newChar.id,
+      business_type_id: btype.id,
+      district_id: district.id,
+      custom_name: bizName,
+      level: 1,
+      last_collected_at: new Date().toISOString(),
+      next_collection_at: new Date(Date.now() + btype.cycle_minutes * 60 * 1000).toISOString(),
+      is_raided: false,
+      type: btype,
+      district: district
+    };
+
+    // Atualiza saldo do personagem com a primeira receita colhida de inauguração
+    const updatedChar: Character = {
+      ...newChar,
+      money: Math.floor(newChar.money + initialRevenue),
+      experience: newChar.experience + 50,
+      respect: newChar.respect + 5
+    };
+
+    const currentBizs = storageService.getBusinesses();
+    currentBizs.push(firstBiz);
+    storageService.saveBusinesses(currentBizs);
+    storageService.saveCharacter(updatedChar);
+
+    // Marca primeira missão 'Fincando Raízes' como completada e pronta
+    this.incrementMissionProgress(updatedChar.id, 'buy_business', 1);
+
+    // Notícia na Gazeta
+    storageService.addArticle({
+      edition_number: 148,
+      headline: `PORTAS ABERTAS: "${bizName.toUpperCase()}" INAUGURA NO ${district.name.toUpperCase()}`,
+      subheadline: `${name} firma raízes e já movimenta o comércio de Santa Augusta.`,
+      category: 'NEGÓCIOS',
+      content: `O novo estabelecimento "${bizName}", sob comando do recém-chegado ${nickname}, abriu suas portas com grande movimento no ${district.name}. Moradores e negociantes comemoram o novo ponto de encontro.`,
+      district_id: district.id,
+      district_name: district.name,
+      related_character_name: name
+    });
+
+    return { character: updatedChar, business: firstBiz };
+  },
+
+  // ----------------------------------------------------------------------------
   // 2. Compra de Negócios
   // ----------------------------------------------------------------------------
   buyBusiness(char: Character, businessTypeId: string, districtId: string, customName?: string): { success: boolean; message: string; character?: Character; business?: PlayerBusiness } {

@@ -48,6 +48,14 @@ interface GameContextType {
   
   // Ações de jogo
   createCharacter: (name: string, nickname: string, origin: string, style: CharacterStyle) => void;
+  createCharacterWithFirstBusiness: (
+    name: string, 
+    nickname: string, 
+    origin: string, 
+    style: CharacterStyle, 
+    firstBusinessName: string, 
+    firstDistrictId: string
+  ) => void;
   buyBusiness: (businessTypeId: string, districtId: string, customName?: string) => void;
   collectBusinessRevenue: (businessId: string) => void;
   upgradeBusiness: (businessId: string) => void;
@@ -156,6 +164,23 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     reloadData();
     setScreen('dashboard');
     notify(`Bem-vindo a Santa Augusta, ${nickname}. A cidade aguarda seus passos.`, 'success');
+  };
+
+  const createCharacterWithFirstBusiness = (
+    name: string, 
+    nickname: string, 
+    origin: string, 
+    style: CharacterStyle,
+    firstBusinessName: string,
+    firstDistrictId: string
+  ) => {
+    const res = gameService.createCharacterWithFirstBusiness(
+      name, nickname, origin, style, firstBusinessName, firstDistrictId
+    );
+    setCharacter(res.character);
+    reloadData();
+    setScreen('dashboard');
+    notify(`Seu nome circula por Santa Augusta, ${nickname}. "${res.business.custom_name}" abriu as portas!`, 'success');
   };
 
   // Compra de negócio
@@ -421,6 +446,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         notifications,
         notify,
         createCharacter,
+        createCharacterWithFirstBusiness,
         buyBusiness,
         collectBusinessRevenue,
         upgradeBusiness,

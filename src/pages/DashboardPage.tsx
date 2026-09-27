@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useGame } from '../context/GameContext';
 import { Button } from '../components/common/Button';
 import { CountdownTimer } from '../components/common/CountdownTimer';
+import { HowItWorksModal } from '../components/common/HowItWorksModal';
 import { 
   Building2, Crosshair, Newspaper, Target, 
-  ArrowRight, PlusCircle, CheckCircle, Flame, ShieldAlert 
+  ArrowRight, PlusCircle, CheckCircle, Flame, ShieldAlert, HelpCircle 
 } from 'lucide-react';
 
 export const DashboardPage: React.FC = () => {
@@ -13,6 +14,8 @@ export const DashboardPage: React.FC = () => {
     articles, missions, setScreen, 
     collectBusinessRevenue, completeAction, claimMissionReward 
   } = useGame();
+
+  const [isManualOpen, setIsManualOpen] = useState(false);
 
   if (!character) return null;
 
@@ -60,12 +63,19 @@ export const DashboardPage: React.FC = () => {
         {/* Citação imersiva */}
         <div className="mt-3 pt-3 border-t border-noir-700/60 text-[11px] text-paper-300 font-serif italic flex items-center gap-2">
           <Flame className="w-3.5 h-3.5 text-gold-500 shrink-0" />
-          <span>
+          <span className="flex-1">
             {character.style === 'empresario' && '“O dinheiro limpo cala a boca de juízes e constrói legados duradouros.”'}
             {character.style === 'negociador' && '“Nenhum conflito resiste a uma proposta bem calculada e ao silêncio certo.”'}
             {character.style === 'contrabandista' && '“A névoa do porto é o melhor manto para quem não teme o mar.”'}
             {character.style === 'executor' && '“O respeito se conquista na bala ou na promessa de sangue.”'}
           </span>
+          <button
+            onClick={() => setIsManualOpen(true)}
+            className="text-[10px] text-gold-400 hover:text-gold-300 font-mono underline shrink-0 flex items-center gap-1"
+          >
+            <HelpCircle className="w-3 h-3" />
+            <span>Como Funciona</span>
+          </button>
         </div>
       </div>
 
@@ -313,6 +323,12 @@ export const DashboardPage: React.FC = () => {
           )}
         </div>
       )}
+
+      {/* Modal Manual de Regras e Como Funciona */}
+      <HowItWorksModal
+        isOpen={isManualOpen}
+        onClose={() => setIsManualOpen(false)}
+      />
     </div>
   );
 };

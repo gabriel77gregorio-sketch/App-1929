@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useGame } from '../../context/GameContext';
-import { Coins, Award, Users, Skull, Calendar, ShieldAlert } from 'lucide-react';
+import { Coins, Award, Users, Skull, Calendar, ShieldAlert, HelpCircle } from 'lucide-react';
+import { HowItWorksModal } from './HowItWorksModal';
 
 export const TopBar: React.FC = () => {
   const { character, claimDailyReward, setScreen } = useGame();
+  const [isManualOpen, setIsManualOpen] = useState(false);
 
   if (!character) return null;
 
@@ -93,6 +95,15 @@ export const TopBar: React.FC = () => {
             </div>
           </div>
 
+          {/* Botão Manual / Como Funciona */}
+          <button
+            onClick={() => setIsManualOpen(true)}
+            className="p-1 text-gold-400 hover:text-gold-300 transition-colors"
+            title="Manual de Santa Augusta — Como Funciona o Jogo"
+          >
+            <HelpCircle className="w-4 h-4" />
+          </button>
+
           {/* Admin shortcut */}
           <button
             onClick={() => setScreen('admin')}
@@ -103,6 +114,12 @@ export const TopBar: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {/* Modal Manual de Regras */}
+      <HowItWorksModal
+        isOpen={isManualOpen}
+        onClose={() => setIsManualOpen(false)}
+      />
     </header>
   );
 };
