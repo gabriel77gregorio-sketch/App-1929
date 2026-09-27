@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #090807;
+    color: #f4ede0;
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  h1, h2, h3, h4, .font-serif-vintage {
+    font-family: 'Cinzel', 'Playfair Display', serif;
+    letter-spacing: 0.04em;
+  }
+}
+
+/* Scrollbar estilizada estilo Art-Déco / Noir */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #11100e;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #332f29;
+  border-radius: 3px;
+  border: 1px solid #c5a05933;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #c5a059;
+}
+
+/* Molduras e detalhes vintage */
+.vintage-border {
+  border: 1px solid #332f29;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.7);
+}
+
+.vintage-border-gold {
+  border: 1px solid rgba(197, 160, 89, 0.35);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), inset 0 0 12px rgba(197, 160, 89, 0.05);
+}
+
+.vintage-header {
+  position: relative;
+}
+
+.vintage-header::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #c5a059, transparent);
+  margin-top: 8px;
+}
+
+/* Animações sutis */
+@keyframes pulse-gold {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; filter: drop-shadow(0 0 8px #c5a05988); }
+}
+
+.animate-gold-pulse {
+  animation: pulse-gold 3s ease-in-out infinite;
+}

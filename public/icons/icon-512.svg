@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="96" fill="#090807"/>
+  <rect x="24" y="24" width="464" height="464" rx="72" fill="none" stroke="#c5a059" stroke-width="4" stroke-opacity="0.5"/>
+  <rect x="38" y="38" width="436" height="436" rx="58" fill="none" stroke="#c5a059" stroke-width="2" stroke-dasharray="10,10" stroke-opacity="0.6"/>
+  
+  <!-- Ornamentos geométricos Art-Déco -->
+  <path d="M 256 80 L 276 110 L 256 140 L 236 110 Z" fill="#c5a059"/>
+  <circle cx="256" cy="256" r="144" fill="#171613" stroke="#c5a059" stroke-width="4"/>
+  <circle cx="256" cy="256" r="128" fill="none" stroke="#d5b773" stroke-width="2" stroke-opacity="0.5"/>
+  
+  <!-- Texto 1929 -->
+  <text x="256" y="275" font-family="'Cinzel', 'Playfair Display', serif" font-size="92" font-weight="900" fill="#c5a059" text-anchor="middle" letter-spacing="4">1929</text>
+  <text x="256" y="325" font-family="'Inter', sans-serif" font-size="18" font-weight="700" fill="#d6c8b3" text-anchor="middle" letter-spacing="8">SANTA AUGUSTA</text>
+  <text x="256" y="355" font-family="'Playfair Display', serif" font-size="14" font-style="italic" fill="#8a8170" text-anchor="middle">DINHEIRO • PODER • SILÊNCIO</text>
+</svg>
