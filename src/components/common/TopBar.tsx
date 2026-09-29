@@ -1,12 +1,19 @@
 import React, { useState } from 'react';
 import { useGame } from '../../context/GameContext';
-import { Coins, Award, Users, Skull, Calendar, ShieldAlert, HelpCircle } from 'lucide-react';
+import { Coins, Award, Users, Skull, Calendar, ShieldAlert, HelpCircle, RotateCcw } from 'lucide-react';
 import { HowItWorksModal } from './HowItWorksModal';
 import { PWAInstallButton } from './PWAInstallBanner';
 
 export const TopBar: React.FC = () => {
-  const { character, claimDailyReward, setScreen } = useGame();
+  const { character, claimDailyReward, setScreen, resetGameData } = useGame();
   const [isManualOpen, setIsManualOpen] = useState(false);
+
+  const handleResetGame = () => {
+    if (window.confirm('Deseja reiniciar o jogo e apagar o progresso atual para testar o novo onboarding?')) {
+      resetGameData();
+      setScreen('character_creation');
+    }
+  };
 
   if (!character) return null;
 
@@ -115,6 +122,16 @@ export const TopBar: React.FC = () => {
             title="Painel de Administração e Balanceamento"
           >
             <ShieldAlert className="w-4 h-4" />
+          </button>
+
+          {/* Botão Reiniciar Jogo (Para testar o Onboarding) */}
+          <button
+            onClick={handleResetGame}
+            className="flex items-center gap-1 px-2 py-1 rounded bg-rose-950/70 hover:bg-rose-900 border border-rose-600/50 text-rose-300 hover:text-rose-100 text-[11px] font-mono font-bold transition-all shadow active:scale-95"
+            title="Reiniciar o Jogo e Testar o Novo Onboarding"
+          >
+            <RotateCcw className="w-3.5 h-3.5 text-rose-400" />
+            <span className="hidden sm:inline">Reiniciar</span>
           </button>
         </div>
       </div>
