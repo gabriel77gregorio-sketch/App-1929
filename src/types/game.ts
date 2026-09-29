@@ -38,6 +38,7 @@ export interface District {
   police_presence: number; // 0 a 100
   base_risk: number; // 0 a 100
   icon: string;
+  illustration?: string; // Imagem panorâmica/temática do distrito
 }
 
 export interface BusinessType {
@@ -52,6 +53,7 @@ export interface BusinessType {
   icon: string;
   min_level: number;
   flavor_quote?: string;
+  illustration?: string; // Imagem do estabelecimento comercial
 }
 
 export interface PlayerBusiness {
@@ -89,6 +91,7 @@ export interface ActionType {
   reward_fear: number;
   base_risk: number;
   success_chance: number;
+  illustration?: string; // URL da imagem ilustrativa da ação
 }
 
 export type ActionStatus = 'in_progress' | 'completed' | 'claimed' | 'failed' | 'cancelled';
@@ -150,6 +153,7 @@ export interface MarketItem {
   description: string;
   volatility: number;
   price_trend?: 'up' | 'down' | 'stable';
+  illustration?: string; // Imagem da mercadoria/commodity
 }
 
 export interface InventoryItem {

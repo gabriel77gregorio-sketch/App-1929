@@ -3,6 +3,8 @@ import { useGame } from '../context/GameContext';
 import { Button } from '../components/common/Button';
 import { ShieldCheck, Zap, Smartphone, ArrowRight, Play } from 'lucide-react';
 
+import heroImage from '../assets/hero.png';
+
 export const LandingPage: React.FC = () => {
   const { setScreen } = useGame();
 
@@ -13,8 +15,8 @@ export const LandingPage: React.FC = () => {
       <div className="absolute inset-0 bg-[radial-gradient(#c5a0590a_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
 
       {/* Linhas decorativas Art Déco no topo */}
-      <div className="relative z-10 pt-8 sm:pt-14 px-6 text-center">
-        <div className="inline-flex items-center gap-3 mb-4">
+      <div className="relative z-10 pt-6 sm:pt-10 px-4 text-center">
+        <div className="inline-flex items-center gap-3 mb-2">
           <div className="h-[1px] w-8 sm:w-16 bg-gradient-to-r from-transparent to-gold-500/60" />
           <span className="font-mono text-[11px] sm:text-xs text-gold-400 tracking-[0.25em] uppercase font-semibold">
             Santa Augusta • Brasil
@@ -23,12 +25,27 @@ export const LandingPage: React.FC = () => {
         </div>
 
         {/* Título Monumental 1929 */}
-        <h1 className="font-display text-6xl sm:text-8xl md:text-9xl font-black text-transparent bg-clip-text bg-gradient-to-b from-paper-100 via-gold-400 to-gold-600 tracking-wider filter drop-shadow-2xl">
+        <h1 className="font-display text-5xl sm:text-7xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-b from-paper-100 via-gold-400 to-gold-600 tracking-wider filter drop-shadow-2xl">
           1929
         </h1>
 
+        {/* Ilustração Visual de Destaque (Hero) */}
+        <div className="mt-3 max-w-xs mx-auto relative rounded-lg overflow-hidden border border-gold-500/40 shadow-2xl">
+          <img
+            src={heroImage}
+            alt="1929 - O submundo de Santa Augusta"
+            className="w-full h-36 sm:h-44 object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-noir-950 via-transparent to-transparent" />
+          <div className="absolute bottom-2 left-0 right-0 text-center">
+            <span className="text-[10px] font-mono tracking-[0.3em] uppercase text-gold-400 bg-noir-950/80 px-2 py-0.5 rounded border border-gold-500/30">
+              Crônica das Ruas &amp; Oligarquias
+            </span>
+          </div>
+        </div>
+
         {/* Tagline Oficial */}
-        <div className="mt-3 sm:mt-5 flex items-center justify-center gap-2 sm:gap-4 text-xs sm:text-sm md:text-base font-display font-bold tracking-[0.3em] text-paper-200 uppercase">
+        <div className="mt-3 flex items-center justify-center gap-2 sm:gap-4 text-xs sm:text-sm font-display font-bold tracking-[0.3em] text-paper-200 uppercase">
           <span>DINHEIRO</span>
           <span className="text-gold-500 font-black">•</span>
           <span>PODER</span>

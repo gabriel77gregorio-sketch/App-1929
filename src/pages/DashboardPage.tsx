@@ -3,10 +3,12 @@ import { useGame } from '../context/GameContext';
 import { Button } from '../components/common/Button';
 import { CountdownTimer } from '../components/common/CountdownTimer';
 import { HowItWorksModal } from '../components/common/HowItWorksModal';
+import { GameImage } from '../components/common/GameImage';
 import { 
   Building2, Crosshair, Newspaper, Target, 
-  ArrowRight, PlusCircle, CheckCircle, Flame, ShieldAlert, HelpCircle 
+  ArrowRight, PlusCircle, CheckCircle, Flame, ShieldAlert, HelpCircle, Store 
 } from 'lucide-react';
+import { INITIAL_BUSINESS_TYPES, INITIAL_ACTION_TYPES } from '../lib/mockData';
 
 export const DashboardPage: React.FC = () => {
   const { 
@@ -114,35 +116,54 @@ export const DashboardPage: React.FC = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {businesses.slice(0, 4).map((biz) => {
+              const btype = biz.type || INITIAL_BUSINESS_TYPES.find(t => t.id === biz.business_type_id);
               const isReady = now >= new Date(biz.next_collection_at).getTime();
               return (
                 <div
                   key={biz.id}
-                  className="bg-noir-900 border border-noir-700/80 hover:border-gold-500/40 rounded-lg p-3.5 transition-all shadow-inner-dark flex flex-col justify-between"
+                  className={`rounded-lg p-3 transition-all shadow-inner-dark flex flex-col justify-between space-y-2.5 border-2 ${
+                    isReady
+                      ? 'bg-gradient-to-b from-emerald-950/20 via-noir-900 to-noir-900 border-emerald-500/80 shadow-[0_0_12px_rgba(16,185,129,0.15)] ring-1 ring-emerald-500/30'
+                      : 'bg-noir-900 border-noir-750 hover:border-gold-500/40'
+                  }`}
                 >
-                  <div className="flex items-start justify-between mb-2">
-                    <div>
-                      <h4 className="font-serif-vintage font-bold text-sm text-paper-100">
-                        {biz.custom_name}
-                      </h4>
-                      <p className="text-[10px] text-noir-400">
+                  <div className="flex items-center gap-2.5">
+                    {/* Thumbnail do negócio com GameImage */}
+                    <div className="w-12 h-12 rounded overflow-hidden shrink-0 border border-noir-700 relative">
+                      <GameImage
+                        src={btype?.illustration}
+                        alt={biz.custom_name}
+                        iconType={btype?.slug}
+                        theme={isReady ? 'emerald' : 'gold'}
+                        aspect="w-full h-full"
+                      />
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-1">
+                        <h4 className="font-serif-vintage font-bold text-sm text-paper-100 truncate">
+                          {biz.custom_name}
+                        </h4>
+                        {isReady && (
+                          <span className="px-1.5 py-0.5 rounded text-[9px] font-mono bg-emerald-950 text-emerald-300 border border-emerald-700 animate-pulse shrink-0 font-bold">
+                            Pronto
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-[10px] text-noir-400 truncate">
                         {biz.district?.name || 'Santa Augusta'} • Nível {biz.level}
                       </p>
                     </div>
-                    {isReady && (
-                      <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-emerald-950 text-emerald-300 border border-emerald-700 animate-pulse">
-                        Pronto
-                      </span>
-                    )}
                   </div>
 
-                  <div className="mt-2 pt-2 border-t border-noir-800/80 flex items-center justify-between">
+                  <div className="pt-2 border-t border-noir-800/80 flex items-center justify-between">
                     {isReady ? (
                       <Button
                         size="sm"
-                        variant="primary"
+                        variant="success"
                         fullWidth
                         onClick={() => collectBusinessRevenue(biz.id)}
+                        className="text-xs py-1.5 min-h-[36px] font-bold"
                       >
                         Recolher Receita
                       </Button>
@@ -181,47 +202,65 @@ export const DashboardPage: React.FC = () => {
         </div>
 
         {activeAction ? (
-          <div className="bg-noir-900 border border-gold-500/40 rounded-lg p-4 shadow-xl">
-            <div className="flex items-start justify-between mb-2">
-              <div>
-                <span className="text-[10px] font-mono uppercase tracking-widest text-gold-400">
-                  Em Andamento
-                </span>
-                <h4 className="font-serif-vintage font-bold text-base text-paper-100">
-                  {activeAction.action_type?.name || 'Operação Especial'}
-                </h4>
-              </div>
-              <span className="text-xs font-mono text-paper-300">
-                {now >= new Date(activeAction.finish_at).getTime() ? (
-                  <span className="text-emerald-400 font-bold">Concluída!</span>
-                ) : (
-                  'Executando...'
-                )}
-              </span>
-            </div>
+          <div className="bg-noir-900 border-2 border-gold-500/50 rounded-lg shadow-xl overflow-hidden">
+            {/* Banner ilustrado da ação ativa com GameImage */}
+            {(() => {
+              const atype = activeAction.action_type || INITIAL_ACTION_TYPES.find(a => a.id === activeAction.action_type_id);
+              const isReady = now >= new Date(activeAction.finish_at).getTime();
+              return (
+                <div>
+                  <div className="relative w-full h-24 sm:h-28 overflow-hidden">
+                    <GameImage
+                      src={atype?.illustration}
+                      alt={atype?.name || 'Operação'}
+                      theme="gold"
+                      iconType="crosshair"
+                      aspect="w-full h-full"
+                    />
+                    <div className="absolute top-2 left-2 right-2 flex justify-between items-center text-[10px] font-mono z-10">
+                      <span className="uppercase tracking-widest text-gold-400 bg-noir-950/90 px-2 py-0.5 rounded border border-gold-500/40 font-bold">
+                        Em Andamento
+                      </span>
+                      <span className="text-paper-200 bg-noir-950/90 px-2 py-0.5 rounded border border-noir-700">
+                        {isReady ? (
+                          <strong className="text-emerald-400 font-bold animate-pulse">✓ Concluída!</strong>
+                        ) : (
+                          'Executando...'
+                        )}
+                      </span>
+                    </div>
+                  </div>
 
-            <p className="text-xs text-noir-400 mb-3">
-              {activeAction.action_type?.description}
-            </p>
+                  <div className="p-3.5 sm:p-4 space-y-2">
+                    <h4 className="font-serif-vintage font-bold text-base text-paper-100">
+                      {atype?.name || 'Operação Especial'}
+                    </h4>
+                    <p className="text-xs text-noir-400 font-serif italic">
+                      {atype?.description}
+                    </p>
 
-            <div className="mt-2">
-              {now >= new Date(activeAction.finish_at).getTime() ? (
-                <Button
-                  fullWidth
-                  variant="primary"
-                  onClick={() => completeAction(activeAction.id)}
-                  className="animate-bounce"
-                >
-                  <CheckCircle className="w-4 h-4 mr-2" />
-                  Receber Relatório e Lucros
-                </Button>
-              ) : (
-                <CountdownTimer
-                  targetDate={activeAction.finish_at}
-                  startDate={activeAction.started_at}
-                />
-              )}
-            </div>
+                    <div className="pt-2 border-t border-noir-800">
+                      {isReady ? (
+                        <Button
+                          fullWidth
+                          variant="success"
+                          onClick={() => completeAction(activeAction.id)}
+                          className="animate-bounce min-h-[42px] text-xs font-bold"
+                        >
+                          <CheckCircle className="w-4 h-4 mr-2" />
+                          Receber Relatório &amp; Lucros
+                        </Button>
+                      ) : (
+                        <CountdownTimer
+                          targetDate={activeAction.finish_at}
+                          startDate={activeAction.started_at}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         ) : (
           <div className="bg-noir-900/60 border border-noir-800 rounded-lg p-4 flex items-center justify-between">
@@ -235,8 +274,9 @@ export const DashboardPage: React.FC = () => {
             </div>
             <Button
               size="sm"
-              variant="outline"
+              variant="primary"
               onClick={() => setScreen('actions')}
+              className="text-xs py-1.5 px-3 min-h-[36px] font-bold"
             >
               Iniciar Operação
             </Button>
@@ -305,9 +345,10 @@ export const DashboardPage: React.FC = () => {
           {currentMission.completed ? (
             <Button
               size="sm"
-              variant="primary"
+              variant="success"
               fullWidth
               onClick={() => claimMissionReward(currentMission.mission_id)}
+              className="font-bold min-h-[38px] animate-bounce"
             >
               Recolher Recompensa (+${currentMission.mission.reward_money.toLocaleString('pt-BR')})
             </Button>

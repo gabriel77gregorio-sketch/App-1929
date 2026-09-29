@@ -10,7 +10,8 @@ export const INITIAL_DISTRICTS: District[] = [
     economic_focus: 'Bancos, Política e Grandes Hotéis',
     police_presence: 75,
     base_risk: 25,
-    icon: 'landmark'
+    icon: 'landmark',
+    illustration: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=600&q=80&fit=crop'
   },
   {
     id: '11111111-1111-1111-1111-111111111102',
@@ -21,7 +22,8 @@ export const INITIAL_DISTRICTS: District[] = [
     economic_focus: 'Contrabando, Cargas e Câmbio Clandestino',
     police_presence: 65,
     base_risk: 45,
-    icon: 'ship'
+    icon: 'ship',
+    illustration: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80&fit=crop'
   },
   {
     id: '11111111-1111-1111-1111-111111111103',
@@ -32,7 +34,8 @@ export const INITIAL_DISTRICTS: District[] = [
     economic_focus: 'Transporte, Logística e Informações',
     police_presence: 50,
     base_risk: 30,
-    icon: 'train'
+    icon: 'train',
+    illustration: 'https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=600&q=80&fit=crop'
   },
   {
     id: '11111111-1111-1111-1111-111111111104',
@@ -43,7 +46,8 @@ export const INITIAL_DISTRICTS: District[] = [
     economic_focus: 'Cassinos, Bares, Espetáculos e Jogos',
     police_presence: 40,
     base_risk: 50,
-    icon: 'wine'
+    icon: 'wine',
+    illustration: 'https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=600&q=80&fit=crop'
   },
   {
     id: '11111111-1111-1111-1111-111111111105',
@@ -54,7 +58,8 @@ export const INITIAL_DISTRICTS: District[] = [
     economic_focus: 'Oficinas, Depósitos e Mercado Paralelo',
     police_presence: 30,
     base_risk: 40,
-    icon: 'wrench'
+    icon: 'wrench',
+    illustration: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600&q=80&fit=crop'
   },
   {
     id: '11111111-1111-1111-1111-111111111106',
@@ -65,7 +70,8 @@ export const INITIAL_DISTRICTS: District[] = [
     economic_focus: 'Café, Terras, Grãos e Poder Feudal',
     police_presence: 45,
     base_risk: 35,
-    icon: 'trees'
+    icon: 'trees',
+    illustration: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&q=80&fit=crop'
   }
 ];
 
@@ -81,7 +87,8 @@ export const INITIAL_BUSINESS_TYPES: BusinessType[] = [
     base_risk: 15,
     icon: 'beer',
     min_level: 1,
-    flavor_quote: 'Um copo de cachaça boa desata línguas e enche a gaveta.'
+    flavor_quote: 'Um copo de cachaça boa desata línguas e enche a gaveta.',
+    illustration: 'https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=600&q=80&fit=crop'
   },
   {
     id: '22222222-2222-2222-2222-222222222202',
@@ -94,7 +101,8 @@ export const INITIAL_BUSINESS_TYPES: BusinessType[] = [
     base_risk: 20,
     icon: 'tool',
     min_level: 2,
-    flavor_quote: 'O barulho dos motores e marretas abafa qualquer conversa sigilosa.'
+    flavor_quote: 'O barulho dos motores e marretas abafa qualquer conversa sigilosa.',
+    illustration: 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=600&q=80&fit=crop'
   },
   {
     id: '22222222-2222-2222-2222-222222222203',
@@ -107,7 +115,8 @@ export const INITIAL_BUSINESS_TYPES: BusinessType[] = [
     base_risk: 25,
     icon: 'warehouse',
     min_level: 2,
-    flavor_quote: 'Se está trancado sob cadeado no armazém, ninguém faz perguntas.'
+    flavor_quote: 'Se está trancado sob cadeado no armazém, ninguém faz perguntas.',
+    illustration: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600&q=80&fit=crop'
   },
   {
     id: '22222222-2222-2222-2222-222222222204',
@@ -120,7 +129,8 @@ export const INITIAL_BUSINESS_TYPES: BusinessType[] = [
     base_risk: 30,
     icon: 'coffee',
     min_level: 3,
-    flavor_quote: 'O café dita o pulso financeiro dos grandes homens de Santa Augusta.'
+    flavor_quote: 'O café dita o pulso financeiro dos grandes homens de Santa Augusta.',
+    illustration: 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=600&q=80&fit=crop'
   },
   {
     id: '22222222-2222-2222-2222-222222222205',
@@ -133,7 +143,8 @@ export const INITIAL_BUSINESS_TYPES: BusinessType[] = [
     base_risk: 45,
     icon: 'dice',
     min_level: 4,
-    flavor_quote: 'Onde nobres, deputados e damas perdem fortunas antes da alvorada.'
+    flavor_quote: 'Onde nobres, deputados e damas perdem fortunas antes da alvorada.',
+    illustration: 'https://images.unsplash.com/photo-1511193311914-0346f16efe90?w=600&q=80&fit=crop'
   }
 ];
 
@@ -155,7 +166,8 @@ export const INITIAL_ACTION_TYPES: ActionType[] = [
     reward_influence: 3,
     reward_fear: 0,
     base_risk: 15,
-    success_chance: 85
+    success_chance: 85,
+    illustration: 'https://images.unsplash.com/photo-1511920170033-f8396924c348?w=600&q=80&fit=crop'
   },
   {
     id: '33333333-3333-3333-3333-333333333302',
@@ -174,7 +186,8 @@ export const INITIAL_ACTION_TYPES: ActionType[] = [
     reward_influence: 1,
     reward_fear: 1,
     base_risk: 25,
-    success_chance: 78
+    success_chance: 78,
+    illustration: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&q=80&fit=crop'
   },
   {
     id: '33333333-3333-3333-3333-333333333303',
@@ -193,7 +206,8 @@ export const INITIAL_ACTION_TYPES: ActionType[] = [
     reward_influence: 0,
     reward_fear: 4,
     base_risk: 35,
-    success_chance: 72
+    success_chance: 72,
+    illustration: 'https://images.unsplash.com/photo-1509803874385-db7c23652552?w=600&q=80&fit=crop'
   },
   {
     id: '33333333-3333-3333-3333-333333333304',
@@ -212,7 +226,8 @@ export const INITIAL_ACTION_TYPES: ActionType[] = [
     reward_influence: 6,
     reward_fear: 0,
     base_risk: 20,
-    success_chance: 80
+    success_chance: 80,
+    illustration: 'https://images.unsplash.com/photo-1589994965851-a8f479c573a9?w=600&q=80&fit=crop'
   },
   {
     id: '33333333-3333-3333-3333-333333333305',
@@ -231,7 +246,8 @@ export const INITIAL_ACTION_TYPES: ActionType[] = [
     reward_influence: 2,
     reward_fear: 2,
     base_risk: 40,
-    success_chance: 70
+    success_chance: 70,
+    illustration: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80&fit=crop'
   },
   {
     id: '33333333-3333-3333-3333-333333333306',
@@ -250,7 +266,8 @@ export const INITIAL_ACTION_TYPES: ActionType[] = [
     reward_influence: 5,
     reward_fear: 2,
     base_risk: 45,
-    success_chance: 65
+    success_chance: 65,
+    illustration: 'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=600&q=80&fit=crop'
   },
   {
     id: '33333333-3333-3333-3333-333333333307',
@@ -269,7 +286,8 @@ export const INITIAL_ACTION_TYPES: ActionType[] = [
     reward_influence: 7,
     reward_fear: 0,
     base_risk: 25,
-    success_chance: 78
+    success_chance: 78,
+    illustration: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&q=80&fit=crop'
   },
   {
     id: '33333333-3333-3333-3333-333333333308',
@@ -288,9 +306,11 @@ export const INITIAL_ACTION_TYPES: ActionType[] = [
     reward_influence: 0,
     reward_fear: 5,
     base_risk: 35,
-    success_chance: 72
+    success_chance: 72,
+    illustration: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=600&q=80&fit=crop'
   }
 ];
+
 
 export const INITIAL_MARKET_ITEMS: MarketItem[] = [
   {
@@ -305,7 +325,8 @@ export const INITIAL_MARKET_ITEMS: MarketItem[] = [
     unit: 'saca',
     description: 'Grãos nobres das melhores lavouras de altitude. A moeda de troca mais forte do país.',
     volatility: 15,
-    price_trend: 'up'
+    price_trend: 'up',
+    illustration: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&q=80&fit=crop'
   },
   {
     id: '44444444-4444-4444-4444-444444444402',
@@ -319,7 +340,8 @@ export const INITIAL_MARKET_ITEMS: MarketItem[] = [
     unit: 'caixa',
     description: 'Garrafas refinadas contrabandeadas das docas, requisitadas pelos clubes nobres.',
     volatility: 20,
-    price_trend: 'down'
+    price_trend: 'down',
+    illustration: 'https://images.unsplash.com/photo-1527281400683-1aae777175f8?w=600&q=80&fit=crop'
   },
   {
     id: '44444444-4444-4444-4444-444444444403',
@@ -333,7 +355,8 @@ export const INITIAL_MARKET_ITEMS: MarketItem[] = [
     unit: 'lote',
     description: 'Pistões, carburadores e engrenagens cruciais para a frota de calhambeques.',
     volatility: 18,
-    price_trend: 'up'
+    price_trend: 'up',
+    illustration: 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=600&q=80&fit=crop'
   },
   {
     id: '44444444-4444-4444-4444-444444444404',
@@ -347,7 +370,8 @@ export const INITIAL_MARKET_ITEMS: MarketItem[] = [
     unit: 'fardo',
     description: 'Tecido nobre para os ternos dos chefões e senhoras da alta sociedade de Santa Augusta.',
     volatility: 12,
-    price_trend: 'stable'
+    price_trend: 'stable',
+    illustration: 'https://images.unsplash.com/photo-1528458909336-e7a0adfed0a5?w=600&q=80&fit=crop'
   },
   {
     id: '44444444-4444-4444-4444-444444444405',
@@ -361,7 +385,8 @@ export const INITIAL_MARKET_ITEMS: MarketItem[] = [
     unit: 'pasta',
     description: 'Documentos comprometedores sobre desvios de verbas e conchavos eleitorais.',
     volatility: 25,
-    price_trend: 'up'
+    price_trend: 'up',
+    illustration: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=600&q=80&fit=crop'
   }
 ];
 
