@@ -7,7 +7,7 @@ import { GameImage } from '../components/common/GameImage';
 import { 
   Building2, Crosshair, Newspaper, Target, 
   ArrowRight, PlusCircle, CheckCircle, Flame, ShieldAlert, HelpCircle, Store,
-  Smartphone, Download
+  Smartphone, Download, Sparkles 
 } from 'lucide-react';
 import { INITIAL_BUSINESS_TYPES, INITIAL_ACTION_TYPES } from '../lib/mockData';
 import { usePWAInstall } from '../hooks/usePWAInstall';
@@ -17,7 +17,8 @@ export const DashboardPage: React.FC = () => {
   const { 
     character, businesses, activeAction, 
     articles, missions, setScreen, 
-    collectBusinessRevenue, completeAction, claimMissionReward 
+    collectBusinessRevenue, completeAction, claimMissionReward,
+    season, attackLogs
   } = useGame();
 
   const [isManualOpen, setIsManualOpen] = useState(false);
@@ -84,6 +85,64 @@ export const DashboardPage: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {/* Widget de Submundo, Rivais e Temporada Sazonal */}
+      {(() => {
+        const pendingRevenges = attackLogs.filter(a => a.can_revenge && !a.revenge_executed);
+        return (
+          <div className="bg-gradient-to-r from-noir-950 via-noir-900 to-noir-950 border border-gold-500/40 rounded-lg p-3.5 sm:p-4 shadow-xl space-y-2.5 relative overflow-hidden">
+            {pendingRevenges.length > 0 && (
+              <div 
+                onClick={() => setScreen('ranking')}
+                className="bg-blood-950/90 border border-rose-500/70 p-2.5 rounded-lg flex items-center justify-between gap-2 cursor-pointer hover:bg-blood-900/90 transition-all shadow-md group animate-pulse"
+              >
+                <div className="flex items-center gap-2">
+                  <Flame className="w-4 h-4 text-amber-400 shrink-0" />
+                  <div className="text-xs">
+                    <span className="font-bold text-rose-200 uppercase font-mono">Invasão Sofrida! </span>
+                    <span className="text-paper-200">
+                      {pendingRevenges[0].attacker_name} saqueou seu negócio.
+                    </span>
+                  </div>
+                </div>
+                <span className="text-[11px] font-mono font-bold text-amber-300 bg-rose-950 px-2 py-0.5 rounded border border-rose-500/40 group-hover:scale-105 transition-transform shrink-0">
+                  Vingança (2x) →
+                </span>
+              </div>
+            )}
+
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-gold-400" />
+                <div>
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-gold-500 font-bold block">
+                    {season.title.split(':')[0]} • {season.days_left} dias restantes
+                  </span>
+                  <h4 className="font-serif-vintage font-bold text-sm text-paper-100 leading-tight">
+                    Passe de Glória (Nível {season.current_level}/10)
+                  </h4>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setScreen('ranking')}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-gold-500/20 hover:bg-gold-500/30 border border-gold-500/60 text-gold-300 hover:text-gold-200 text-xs font-mono font-bold transition-all shadow-gold-subtle cursor-pointer"
+              >
+                <Crosshair className="w-3.5 h-3.5 text-gold-400" />
+                <span>Disputa &amp; Rivais</span>
+              </button>
+            </div>
+
+            {/* Barra de Progresso da Temporada */}
+            <div className="w-full bg-noir-950 h-2 rounded-full overflow-hidden border border-noir-700">
+              <div 
+                className="bg-gradient-to-r from-gold-600 via-gold-500 to-amber-400 h-full rounded-full transition-all"
+                style={{ width: `${Math.min(100, ((season.current_glory % season.glory_per_level) / season.glory_per_level) * 100)}%` }}
+              />
+            </div>
+          </div>
+        );
+      })()}
 
       {/* 2. Seu Império (Negócios) */}
       <div className="space-y-3">

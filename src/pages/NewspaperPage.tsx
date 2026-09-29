@@ -7,7 +7,7 @@ export const NewspaperPage: React.FC = () => {
   const { articles } = useGame();
   const [selectedCategory, setSelectedCategory] = useState<string>('TODAS');
 
-  const categories = ['TODAS', 'CIDADE', 'NEGÓCIOS', 'POLÍCIA', 'FAMÍLIAS', 'MERCADO'];
+  const categories = ['TODAS', 'RIVAIS', 'CIDADE', 'NEGÓCIOS', 'POLÍCIA', 'FAMÍLIAS', 'MERCADO'];
 
   const filteredArticles = selectedCategory === 'TODAS'
     ? articles

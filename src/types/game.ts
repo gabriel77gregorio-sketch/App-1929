@@ -256,3 +256,86 @@ export interface OfflineSummary {
   }>;
   pending_proposals_count: number;
 }
+
+// === SISTEMA SOCIAL, RIVAIS E RETENÇÃO ASSÍNCRONA ===
+
+export type SabotageTypeId = 'armazem' | 'denuncia' | 'gazeta';
+
+export interface SabotageType {
+  id: SabotageTypeId;
+  name: string;
+  description: string;
+  energy_cost: number;
+  cost_money: number;
+  success_rate_base: number; // 0 a 100
+  risk_police: number; // 0 a 100
+  reward_label: string;
+  icon: string;
+}
+
+export interface RivalTarget {
+  id: string;
+  name: string;
+  nickname: string;
+  title: string;
+  family_name: string;
+  family_tag: string;
+  level: number;
+  fortune: number;
+  respect: number;
+  defense_rating: number; // 10 a 80 (%)
+  district_name: string;
+  avatar_initial: string;
+  is_player: boolean;
+  online_status: 'online' | 'recente' | 'ausente';
+  last_attacked_at?: string;
+}
+
+export interface RivalAttack {
+  id: string;
+  attacker_id: string;
+  attacker_name: string;
+  victim_id: string;
+  victim_name: string;
+  sabotage_type: SabotageTypeId;
+  success: boolean;
+  loot_money: number;
+  loot_respect: number;
+  created_at: string;
+  can_revenge: boolean; // Se verdadeiro, jogador pode dar troco em dobro
+  revenge_executed?: boolean;
+  headline_generated?: string;
+  details: string;
+}
+
+export interface PlayerDefense {
+  guards_count: number; // 0 a 5 guarda-costas (cada um reduz 10% do sucesso de invasores)
+  safe_level: number; // 1 a 3 (protege % de dinheiro contra assaltos)
+  bribe_police_active_until?: string; // Imunidade contra denúncias por X horas
+}
+
+export interface SeasonReward {
+  level: number;
+  required_glory: number;
+  title: string;
+  reward_type: 'money' | 'respect' | 'influence' | 'item';
+  reward_amount: number;
+  reward_name: string;
+  item_id?: string;
+  icon: string;
+}
+
+export interface SeasonData {
+  season_number: number;
+  title: string;
+  subtitle: string;
+  theme_color: string;
+  end_date: string; // Ex: '1929-12-15'
+  days_left: number;
+  current_level: number;
+  current_glory: number;
+  glory_per_level: number;
+  claimed_levels: number[];
+  rewards: SeasonReward[];
+}
+

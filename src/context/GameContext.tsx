@@ -1,11 +1,13 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { 
   Character, PlayerBusiness, PlayerAction, InventoryItem, 
-  PlayerMission, NewspaperArticle, Proposal, GameEvent, Territory, Family, OfflineSummary, CharacterStyle 
+  PlayerMission, NewspaperArticle, Proposal, GameEvent, Territory, Family, OfflineSummary, CharacterStyle,
+  RivalTarget, RivalAttack, SeasonData, PlayerDefense, SabotageTypeId 
 } from '../types/game';
 import { storageService } from '../services/storageService';
 import { gameService } from '../services/gameService';
 import { authService, AuthUser } from '../services/authService';
+import { rivalService } from '../services/rivalService';
 import { INITIAL_BUSINESS_TYPES, INITIAL_DISTRICTS } from '../lib/mockData';
 
 export type Screen = 
@@ -76,6 +78,17 @@ interface GameContextType {
   linkAccountWithGoogle: () => Promise<{ success: boolean; error?: string }>;
   loginWithGoogle: () => Promise<{ success: boolean; error?: string }>;
   logoutGoogle: () => Promise<void>;
+
+  // Rivais, Sabotagens & Temporadas (Retenção / Social)
+  rivals: RivalTarget[];
+  attackLogs: RivalAttack[];
+  playerDefense: PlayerDefense;
+  season: SeasonData;
+  executeSabotage: (rivalId: string, sabotageType: SabotageTypeId, isRevenge?: boolean) => Promise<{ success: boolean; message: string; lootMoney: number; lootRespect: number }>;
+  hireGuard: () => void;
+  upgradeSafe: () => void;
+  claimSeasonReward: (level: number) => void;
+  refreshRivals: () => void;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -95,6 +108,12 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [offlineSummary, setOfflineSummary] = useState<OfflineSummary | null>(null);
   const [notifications, setNotifications] = useState<GameNotification[]>([]);
   const [authUser, setAuthUser] = useState<AuthUser | null>(null);
+
+  // Estados de Rivais & Temporadas
+  const [rivals, setRivals] = useState<RivalTarget[]>([]);
+  const [attackLogs, setAttackLogs] = useState<RivalAttack[]>([]);
+  const [playerDefense, setPlayerDefense] = useState<PlayerDefense>({ guards_count: 1, safe_level: 1 });
+  const [season, setSeason] = useState<SeasonData>(rivalService.getSeasonData());
 
   const notify = useCallback((message: string, type: 'success' | 'warning' | 'error' | 'info' = 'info') => {
     const id = 'notif-' + Date.now() + '-' + Math.random();
@@ -126,6 +145,12 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setTerritories(storageService.getTerritories());
     setProposals(storageService.getProposals());
     setEvents(storageService.getEvents());
+
+    // Atualiza Rivais, Defesa e Temporadas
+    setRivals(rivalService.getRivals());
+    setAttackLogs(rivalService.getAttackLogs());
+    setPlayerDefense(rivalService.getPlayerDefense());
+    setSeason(rivalService.getSeasonData());
 
     if (char) {
       const summary = gameService.getOfflineSummary(char);
@@ -512,6 +537,68 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     notify('Desconectado da conta Google.', 'info');
   };
 
+  // Funções de Rivais & Temporadas
+  const executeSabotage = async (rivalId: string, sabotageType: SabotageTypeId, isRevenge = false) => {
+    if (!character) return { success: false, message: 'Personagem não encontrado.', lootMoney: 0, lootRespect: 0 };
+    const res = rivalService.executeSabotage(character, rivalId, sabotageType, isRevenge);
+    setCharacter(res.character);
+    reloadData();
+    if (res.success) {
+      notify(res.message, 'success');
+    } else {
+      notify(res.message, 'warning');
+    }
+    return {
+      success: res.success,
+      message: res.message,
+      lootMoney: res.lootMoney,
+      lootRespect: res.lootRespect
+    };
+  };
+
+  const hireGuard = () => {
+    if (!character) return;
+    const res = rivalService.hireGuard(character);
+    if (res.success) {
+      setCharacter(res.character);
+      setPlayerDefense(res.defense);
+      reloadData();
+      notify(res.message, 'success');
+    } else {
+      notify(res.message, 'error');
+    }
+  };
+
+  const upgradeSafe = () => {
+    if (!character) return;
+    const res = rivalService.upgradeSafe(character);
+    if (res.success) {
+      setCharacter(res.character);
+      setPlayerDefense(res.defense);
+      reloadData();
+      notify(res.message, 'success');
+    } else {
+      notify(res.message, 'error');
+    }
+  };
+
+  const claimSeasonReward = (level: number) => {
+    if (!character) return;
+    const res = rivalService.claimSeasonReward(character, level);
+    if (res.success) {
+      setCharacter(res.character);
+      setSeason(res.season);
+      reloadData();
+      notify(res.message, 'success');
+    } else {
+      notify(res.message, 'info');
+    }
+  };
+
+  const refreshRivals = () => {
+    setRivals(rivalService.getRivals());
+  };
+
   return (
     <GameContext.Provider
       value={{
@@ -550,7 +637,16 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         authUser,
         linkAccountWithGoogle,
         loginWithGoogle,
-        logoutGoogle
+        logoutGoogle,
+        rivals,
+        attackLogs,
+        playerDefense,
+        season,
+        executeSabotage,
+        hireGuard,
+        upgradeSafe,
+        claimSeasonReward,
+        refreshRivals
       }}
     >
       {children}
