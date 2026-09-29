@@ -68,7 +68,7 @@ interface GameContextType {
   respondProposal: (proposalId: string, accept: boolean) => void;
   createFamily: (name: string, tag: string, motto: string) => void;
   joinFamily: (familyId: string) => void;
-  resetGameData: () => void;
+  resetGameData: (targetScreen?: Screen) => void;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -129,12 +129,26 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Inicialização no mount
   useEffect(() => {
+    try {
+      const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+      if (params && (params.has('onboarding') || params.has('reset'))) {
+        storageService.clearAll();
+        setCharacter(null);
+        reloadData();
+        setScreen('character_creation');
+        return;
+      }
+    } catch {
+      // Ignora erro de parsing de URL
+    }
+
     const char = storageService.getCharacter();
     if (char) {
       setCharacter(char);
       setScreen('dashboard');
     } else {
-      setScreen('landing');
+      // Sem personagem salvo, vai diretamente para a criação/onboarding
+      setScreen('character_creation');
     }
     reloadData();
   }, [reloadData]);
@@ -417,12 +431,12 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     notify(`Você prestou juramento à ${fam.name}. Honre seu nome.`, 'success');
   };
 
-  const resetGameData = () => {
-    localStorage.clear();
+  const resetGameData = (targetScreen: Screen = 'character_creation') => {
+    storageService.clearAll();
     setCharacter(null);
-    setScreen('landing');
     reloadData();
-    notify('Dados reiniciados com sucesso.', 'info');
+    setScreen(targetScreen);
+    notify('Jogo reiniciado! Abrindo novo Onboarding...', 'success');
   };
 
   return (

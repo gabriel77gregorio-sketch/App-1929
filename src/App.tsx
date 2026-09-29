@@ -18,9 +18,10 @@ import { FamilyPage } from './pages/FamilyPage';
 import { NewspaperPage } from './pages/NewspaperPage';
 import { RankingPage } from './pages/RankingPage';
 import { AdminPage } from './pages/AdminPage';
+import { Sparkles } from 'lucide-react';
 
 export const App: React.FC = () => {
-  const { screen, character } = useGame();
+  const { screen, character, resetGameData } = useGame();
 
   // Se não tem personagem ou está na landing/criação, exibe as telas dedicadas
   if (screen === 'landing') {
@@ -57,6 +58,18 @@ export const App: React.FC = () => {
         {screen === 'ranking' && <RankingPage />}
         {screen === 'admin' && <AdminPage />}
       </main>
+
+      {/* Botão Flutuante de Acesso Rápido para Testar o Onboarding */}
+      <div className="fixed bottom-16 right-3 z-50 sm:bottom-20 sm:right-6">
+        <button
+          onClick={() => resetGameData('character_creation')}
+          className="bg-gold-500 hover:bg-gold-400 text-noir-950 font-black text-xs px-3.5 py-2 rounded-full shadow-2xl border-2 border-noir-900 flex items-center gap-1.5 animate-gold-pulse cursor-pointer transition-transform hover:scale-105 active:scale-95"
+          title="Reiniciar e Abrir o Novo Onboarding de 21 Páginas"
+        >
+          <Sparkles className="w-4 h-4 text-noir-950" />
+          <span>Testar Onboarding (21 Páginas)</span>
+        </button>
+      </div>
 
       {/* Navegação Inferior Mobile-First */}
       <BottomNav />

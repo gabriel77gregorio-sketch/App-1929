@@ -73,6 +73,17 @@ export const storageService = {
     safeRemoveItem(STORAGE_KEYS.CHARACTER);
   },
 
+  clearAll(): void {
+    Object.values(STORAGE_KEYS).forEach((k) => safeRemoveItem(k));
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        window.localStorage.clear();
+      }
+    } catch (e) {
+      console.warn('[1929 Storage] Falha ao limpar storage:', e);
+    }
+  },
+
   // Negócios do jogador
   getBusinesses(): PlayerBusiness[] {
     const raw = safeGetItem(STORAGE_KEYS.BUSINESSES);

@@ -9,9 +9,8 @@ export const TopBar: React.FC = () => {
   const [isManualOpen, setIsManualOpen] = useState(false);
 
   const handleResetGame = () => {
-    if (window.confirm('Deseja reiniciar o jogo e apagar o progresso atual para testar o novo onboarding?')) {
-      resetGameData();
-      setScreen('character_creation');
+    if (window.confirm('Deseja reiniciar o jogo e apagar o progresso atual para testar o novo onboarding de 21 páginas?')) {
+      resetGameData('character_creation');
     }
   };
 
@@ -127,11 +126,11 @@ export const TopBar: React.FC = () => {
           {/* Botão Reiniciar Jogo (Para testar o Onboarding) */}
           <button
             onClick={handleResetGame}
-            className="flex items-center gap-1 px-2 py-1 rounded bg-rose-950/70 hover:bg-rose-900 border border-rose-600/50 text-rose-300 hover:text-rose-100 text-[11px] font-mono font-bold transition-all shadow active:scale-95"
-            title="Reiniciar o Jogo e Testar o Novo Onboarding"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-rose-950/80 hover:bg-rose-900 border border-rose-500/70 text-rose-200 hover:text-white text-xs font-mono font-bold transition-all shadow-md active:scale-95 cursor-pointer"
+            title="Reiniciar o Jogo e Abrir o Novo Onboarding de 21 Páginas"
           >
             <RotateCcw className="w-3.5 h-3.5 text-rose-400" />
-            <span className="hidden sm:inline">Reiniciar</span>
+            <span>Reiniciar (Testar Onboarding)</span>
           </button>
         </div>
       </div>

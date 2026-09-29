@@ -1,14 +1,14 @@
 import React from 'react';
 import { useGame } from '../context/GameContext';
 import { Button } from '../components/common/Button';
-import { ShieldCheck, Zap, Smartphone, ArrowRight, Play, Download } from 'lucide-react';
+import { ShieldCheck, Zap, Smartphone, ArrowRight, Play, Download, Sparkles } from 'lucide-react';
 import { usePWAInstall } from '../hooks/usePWAInstall';
 import { PWAInstallModal } from '../components/common/PWAInstallModal';
 
 import heroImage from '../assets/hero.png';
 
 export const LandingPage: React.FC = () => {
-  const { setScreen } = useGame();
+  const { setScreen, resetGameData } = useGame();
   const { isInstallable, isStandalone, showIOSInstructions, setShowIOSInstructions, installApp } = usePWAInstall();
 
   return (
@@ -18,7 +18,18 @@ export const LandingPage: React.FC = () => {
       <div className="absolute inset-0 bg-[radial-gradient(#c5a0590a_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
 
       {/* Linhas decorativas Art Déco no topo */}
-      <div className="relative z-10 pt-6 sm:pt-10 px-4 text-center">
+      <div className="relative z-10 pt-4 sm:pt-8 px-4 text-center">
+        {/* Banner de Teste do Novo Onboarding */}
+        <div className="mb-2">
+          <button
+            onClick={() => resetGameData('character_creation')}
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gold-500/20 border border-gold-500/60 text-gold-400 text-xs font-mono font-bold hover:bg-gold-500/30 transition-all cursor-pointer shadow-gold-glow animate-pulse"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-gold-400" />
+            <span>Testar Novo Onboarding (21 Páginas) • Clique Aqui</span>
+          </button>
+        </div>
+
         <div className="inline-flex items-center gap-3 mb-2">
           <div className="h-[1px] w-8 sm:w-16 bg-gradient-to-r from-transparent to-gold-500/60" />
           <span className="font-mono text-[11px] sm:text-xs text-gold-400 tracking-[0.25em] uppercase font-semibold">
@@ -77,10 +88,10 @@ export const LandingPage: React.FC = () => {
               size="lg"
               fullWidth
               variant="primary"
-              onClick={() => setScreen('character_creation')}
-              className="text-base sm:text-lg py-3.5 shadow-gold-glow animate-gold-pulse"
+              onClick={() => resetGameData('character_creation')}
+              className="text-base sm:text-lg py-3.5 shadow-gold-glow animate-gold-pulse font-bold"
             >
-              <span>COMEÇAR AGORA</span>
+              <span>INICIAR ONBOARDING (21 PÁGINAS)</span>
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
 
