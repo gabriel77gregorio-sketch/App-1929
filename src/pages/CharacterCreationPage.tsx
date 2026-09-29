@@ -517,7 +517,7 @@ export const CharacterCreationPage: React.FC = () => {
                 className="shadow-gold-glow animate-gold-pulse font-bold"
               >
                 <Sparkles className="w-4 h-4 mr-2" />
-                ASSUMIR O CONTROLE DE SANTA AUGUSTA
+                COMEÇAR SUA HISTÓRIA EM SANTA AUGUSTA
               </Button>
             )}
           </div>

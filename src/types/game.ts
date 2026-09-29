@@ -92,6 +92,7 @@ export interface ActionType {
   base_risk: number;
   success_chance: number;
   illustration?: string; // URL da imagem ilustrativa da ação
+  button_label?: string; // Texto específico e contextual do botão de ação
 }
 
 export type ActionStatus = 'in_progress' | 'completed' | 'claimed' | 'failed' | 'cancelled';

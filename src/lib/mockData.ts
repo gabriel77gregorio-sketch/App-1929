@@ -167,7 +167,8 @@ export const INITIAL_ACTION_TYPES: ActionType[] = [
     reward_fear: 0,
     base_risk: 15,
     success_chance: 85,
-    illustration: 'https://images.unsplash.com/photo-1511920170033-f8396924c348?w=600&q=80&fit=crop'
+    illustration: 'https://images.unsplash.com/photo-1511920170033-f8396924c348?w=600&q=80&fit=crop',
+    button_label: 'Coletar Informações'
   },
   {
     id: '33333333-3333-3333-3333-333333333302',
@@ -187,7 +188,8 @@ export const INITIAL_ACTION_TYPES: ActionType[] = [
     reward_fear: 1,
     base_risk: 25,
     success_chance: 78,
-    illustration: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&q=80&fit=crop'
+    illustration: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&q=80&fit=crop',
+    button_label: 'Transportar Carga'
   },
   {
     id: '33333333-3333-3333-3333-333333333303',
@@ -207,7 +209,8 @@ export const INITIAL_ACTION_TYPES: ActionType[] = [
     reward_fear: 4,
     base_risk: 35,
     success_chance: 72,
-    illustration: 'https://images.unsplash.com/photo-1509803874385-db7c23652552?w=600&q=80&fit=crop'
+    illustration: 'https://images.unsplash.com/photo-1509803874385-db7c23652552?w=600&q=80&fit=crop',
+    button_label: 'Intimidar Devedor'
   },
   {
     id: '33333333-3333-3333-3333-333333333304',
@@ -227,7 +230,8 @@ export const INITIAL_ACTION_TYPES: ActionType[] = [
     reward_fear: 0,
     base_risk: 20,
     success_chance: 80,
-    illustration: 'https://images.unsplash.com/photo-1589994965851-a8f479c573a9?w=600&q=80&fit=crop'
+    illustration: 'https://images.unsplash.com/photo-1589994965851-a8f479c573a9?w=600&q=80&fit=crop',
+    button_label: 'Subornar Escrivão'
   },
   {
     id: '33333333-3333-3333-3333-333333333305',
@@ -247,7 +251,8 @@ export const INITIAL_ACTION_TYPES: ActionType[] = [
     reward_fear: 2,
     base_risk: 40,
     success_chance: 70,
-    illustration: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80&fit=crop'
+    illustration: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80&fit=crop',
+    button_label: 'Descarregar Contrabando'
   },
   {
     id: '33333333-3333-3333-3333-333333333306',
@@ -267,7 +272,8 @@ export const INITIAL_ACTION_TYPES: ActionType[] = [
     reward_fear: 2,
     base_risk: 45,
     success_chance: 65,
-    illustration: 'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=600&q=80&fit=crop'
+    illustration: 'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=600&q=80&fit=crop',
+    button_label: 'Operar Banca de Roleta'
   },
   {
     id: '33333333-3333-3333-3333-333333333307',
@@ -287,7 +293,8 @@ export const INITIAL_ACTION_TYPES: ActionType[] = [
     reward_fear: 0,
     base_risk: 25,
     success_chance: 78,
-    illustration: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&q=80&fit=crop'
+    illustration: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&q=80&fit=crop',
+    button_label: 'Interceptar Telegramas'
   },
   {
     id: '33333333-3333-3333-3333-333333333308',
@@ -307,9 +314,49 @@ export const INITIAL_ACTION_TYPES: ActionType[] = [
     reward_fear: 5,
     base_risk: 35,
     success_chance: 72,
-    illustration: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=600&q=80&fit=crop'
+    illustration: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=600&q=80&fit=crop',
+    button_label: 'Cobrar Pedágio'
   }
 ];
+
+/**
+ * Retorna o texto do botão de ação contextual e temático, fazendo alusão direta à ação realizada
+ */
+export const getActionButtonLabel = (action?: Partial<ActionType> | null): string => {
+  if (!action) return 'Executar Ação';
+  if (action.button_label) return action.button_label;
+
+  const labelsBySlug: Record<string, string> = {
+    coletar_info: 'Coletar Informações',
+    transporte_fardo: 'Transportar Carga',
+    intimidar_comerciante: 'Intimidar Devedor',
+    subornar_escrivao: 'Subornar Escrivão',
+    descarregar_porto: 'Descarregar Contrabando',
+    operacao_cassino: 'Operar Banca de Roleta',
+    interceptar_carta: 'Interceptar Telegramas',
+    pedagio_carrocas: 'Cobrar Pedágio',
+  };
+
+  if (action.slug && labelsBySlug[action.slug]) {
+    return labelsBySlug[action.slug];
+  }
+
+  if (action.name) {
+    if (action.name.length <= 22) return action.name;
+    const parts = action.name.split(' ');
+    if (parts.length >= 2) return parts.slice(0, 3).join(' ');
+    return action.name;
+  }
+
+  switch (action.category) {
+    case 'violencia': return 'Executar Ação Armada';
+    case 'influencia': return 'Exercer Influência';
+    case 'comercio': return 'Operar Negócio';
+    case 'investigacao': return 'Investigar Pistas';
+    case 'operacao': return 'Conduzir Operação';
+    default: return 'Executar Ação';
+  }
+};
 
 
 export const INITIAL_MARKET_ITEMS: MarketItem[] = [

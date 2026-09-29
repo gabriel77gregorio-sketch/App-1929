@@ -3,7 +3,7 @@ import { useGame } from '../context/GameContext';
 import { Button } from '../components/common/Button';
 import { CountdownTimer } from '../components/common/CountdownTimer';
 import { GameImage } from '../components/common/GameImage';
-import { INITIAL_ACTION_TYPES } from '../lib/mockData';
+import { INITIAL_ACTION_TYPES, getActionButtonLabel } from '../lib/mockData';
 import { ActionType, ActionCategory } from '../types/game';
 import { 
   Crosshair, Clock, ShieldAlert, Award, 
@@ -261,7 +261,7 @@ export const ActionsPage: React.FC = () => {
                         {isBusy 
                           ? 'Ocupado' 
                           : canAfford 
-                            ? 'Iniciar Operação' 
+                            ? getActionButtonLabel(atype) 
                             : 'Fundos Insuficientes'}
                       </Button>
                     )}

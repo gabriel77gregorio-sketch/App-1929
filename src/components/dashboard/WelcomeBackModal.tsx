@@ -101,7 +101,15 @@ export const WelcomeBackModal: React.FC = () => {
               }
             }}
           >
-            <span>Assumir o Controle</span>
+            <span>
+              {offlineSummary.ready_businesses.length > 0 && offlineSummary.completed_actions.length > 0
+                ? 'Recolher Lucros & Ver Relatórios'
+                : offlineSummary.ready_businesses.length > 0
+                  ? 'Recolher Renda dos Negócios'
+                  : offlineSummary.completed_actions.length > 0
+                    ? 'Ver Relatório das Ações'
+                    : 'Entrar em Santa Augusta'}
+            </span>
             <ArrowRight className="w-4 h-4 ml-1" />
           </Button>
         </div>

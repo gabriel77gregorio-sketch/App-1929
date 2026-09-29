@@ -282,7 +282,7 @@ export const DashboardPage: React.FC = () => {
               onClick={() => setScreen('actions')}
               className="text-xs py-1.5 px-3 min-h-[36px] font-bold"
             >
-              Iniciar Operação
+              Explorar Ações nas Ruas
             </Button>
           </div>
         )}
