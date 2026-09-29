@@ -5,6 +5,7 @@ import {
 } from '../types/game';
 import { storageService } from '../services/storageService';
 import { gameService } from '../services/gameService';
+import { authService, AuthUser } from '../services/authService';
 import { INITIAL_BUSINESS_TYPES, INITIAL_DISTRICTS } from '../lib/mockData';
 
 export type Screen = 
@@ -69,6 +70,12 @@ interface GameContextType {
   createFamily: (name: string, tag: string, motto: string) => void;
   joinFamily: (familyId: string) => void;
   resetGameData: (targetScreen?: Screen) => void;
+
+  // Autenticação & Vinculação Google
+  authUser: AuthUser | null;
+  linkAccountWithGoogle: () => Promise<{ success: boolean; error?: string }>;
+  loginWithGoogle: () => Promise<{ success: boolean; error?: string }>;
+  logoutGoogle: () => Promise<void>;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -87,6 +94,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [events, setEvents] = useState<GameEvent[]>([]);
   const [offlineSummary, setOfflineSummary] = useState<OfflineSummary | null>(null);
   const [notifications, setNotifications] = useState<GameNotification[]>([]);
+  const [authUser, setAuthUser] = useState<AuthUser | null>(null);
 
   const notify = useCallback((message: string, type: 'success' | 'warning' | 'error' | 'info' = 'info') => {
     const id = 'notif-' + Date.now() + '-' + Math.random();
@@ -129,6 +137,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Inicialização no mount
   useEffect(() => {
+    authService.getCurrentUser().then(u => {
+      if (u) setAuthUser(u);
+    });
+
     try {
       const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
       if (params && (params.has('onboarding') || params.has('reset'))) {
@@ -439,6 +451,67 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     notify('Jogo reiniciado! Abrindo novo Onboarding...', 'success');
   };
 
+  // Autenticação & Vinculação Google
+  const linkAccountWithGoogle = async (): Promise<{ success: boolean; error?: string }> => {
+    try {
+      const res = await authService.signInWithGoogle();
+      if (!res.success) return { success: false, error: res.error };
+
+      const user = res.user || (await authService.getCurrentUser());
+      if (user) {
+        setAuthUser(user);
+        if (character) {
+          const { character: updatedChar, bonusGranted } = authService.linkCharacterToGoogle(
+            character, 
+            user.email || 'jogador1929@gmail.com'
+          );
+          setCharacter(updatedChar);
+          if (bonusGranted) {
+            notify('Conta vinculada ao Google! Bônus de +$500 réis e +5 Respeito creditados!', 'success');
+          } else {
+            notify('Conta Google conectada com sucesso.', 'success');
+          }
+        }
+      }
+      return { success: true };
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Falha ao conectar com o Google.' };
+    }
+  };
+
+  const loginWithGoogle = async (): Promise<{ success: boolean; error?: string }> => {
+    try {
+      const res = await authService.signInWithGoogle();
+      if (!res.success) return { success: false, error: res.error };
+      const user = res.user || (await authService.getCurrentUser());
+      if (user) {
+        setAuthUser(user);
+        reloadData();
+        const char = storageService.getCharacter();
+        if (char) {
+          setScreen('dashboard');
+          notify(`Bem-vindo de volta a Santa Augusta, ${char.nickname}!`, 'success');
+        } else {
+          setScreen('character_creation');
+        }
+      }
+      return { success: true };
+    } catch (err: any) {
+      return { success: false, error: err?.message || 'Falha ao autenticar com o Google.' };
+    }
+  };
+
+  const logoutGoogle = async () => {
+    await authService.signOut();
+    setAuthUser(null);
+    if (character) {
+      const updatedChar = { ...character, is_cloud_synced: false };
+      setCharacter(updatedChar);
+      storageService.saveCharacter(updatedChar);
+    }
+    notify('Desconectado da conta Google.', 'info');
+  };
+
   return (
     <GameContext.Provider
       value={{
@@ -473,7 +546,11 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         respondProposal,
         createFamily,
         joinFamily,
-        resetGameData
+        resetGameData,
+        authUser,
+        linkAccountWithGoogle,
+        loginWithGoogle,
+        logoutGoogle
       }}
     >
       {children}

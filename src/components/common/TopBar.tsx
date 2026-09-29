@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { useGame } from '../../context/GameContext';
-import { Coins, Award, Users, Skull, Calendar, ShieldAlert, HelpCircle, RotateCcw } from 'lucide-react';
+import { Coins, Award, Users, Skull, Calendar, ShieldAlert, HelpCircle, RotateCcw, Cloud, CheckCircle2 } from 'lucide-react';
 import { HowItWorksModal } from './HowItWorksModal';
 import { PWAInstallButton } from './PWAInstallBanner';
+import { GoogleLinkModal } from './GoogleLinkModal';
 
 export const TopBar: React.FC = () => {
   const { character, claimDailyReward, setScreen, resetGameData } = useGame();
   const [isManualOpen, setIsManualOpen] = useState(false);
+  const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);
 
   const handleResetGame = () => {
     if (window.confirm('Deseja reiniciar o jogo e apagar o progresso atual para testar o novo onboarding de 21 páginas?')) {
@@ -123,6 +125,28 @@ export const TopBar: React.FC = () => {
             <ShieldAlert className="w-4 h-4" />
           </button>
 
+          {/* Botão Vincular / Status Google */}
+          {character.is_cloud_synced ? (
+            <button
+              onClick={() => setIsGoogleModalOpen(true)}
+              className="flex items-center gap-1.5 px-2 py-1 rounded bg-emerald-950/60 hover:bg-emerald-900/80 border border-emerald-500/50 text-emerald-300 text-xs font-mono transition-all cursor-pointer"
+              title={`Conta sincronizada via Google: ${character.google_email || 'Nuvem Ativa'}`}
+            >
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+              <span className="hidden lg:inline text-[11px]">Nuvem Salva</span>
+            </button>
+          ) : (
+            <button
+              onClick={() => setIsGoogleModalOpen(true)}
+              className="flex items-center gap-1.5 px-2 py-1 rounded bg-gradient-to-r from-amber-500/20 to-gold-500/20 hover:from-amber-500/30 hover:to-gold-500/30 border border-gold-500/60 text-gold-300 text-xs font-mono font-medium transition-all shadow-gold-subtle cursor-pointer animate-pulse"
+              title="Vincular Conta Google e Salvar na Nuvem (Ganhe $500 réis + 5 Respeito!)"
+            >
+              <Cloud className="w-3.5 h-3.5 text-gold-400" />
+              <span className="hidden sm:inline text-[11px]">Salvar Conta</span>
+              <span className="bg-gold-500 text-noir-950 text-[10px] font-bold px-1 rounded-sm leading-tight">+$500</span>
+            </button>
+          )}
+
           {/* Botão Reiniciar Jogo (Para testar o Onboarding) */}
           <button
             onClick={handleResetGame}
@@ -139,6 +163,12 @@ export const TopBar: React.FC = () => {
       <HowItWorksModal
         isOpen={isManualOpen}
         onClose={() => setIsManualOpen(false)}
+      />
+
+      {/* Modal Vincular Google */}
+      <GoogleLinkModal
+        isOpen={isGoogleModalOpen}
+        onClose={() => setIsGoogleModalOpen(false)}
       />
     </header>
   );

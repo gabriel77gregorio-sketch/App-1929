@@ -26,6 +26,8 @@ export interface Character {
   last_offline_check: string;
   created_at: string;
   is_admin?: boolean;
+  google_email?: string;
+  is_cloud_synced?: boolean;
 }
 
 export interface District {
