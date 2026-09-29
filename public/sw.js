@@ -1,5 +1,5 @@
 // 1929 PWA Service Worker
-const CACHE_NAME = '1929-cache-v3';
+const CACHE_NAME = '1929-cache-v4';
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -8,6 +8,8 @@ self.addEventListener('install', (event) => {
         './',
         './index.html',
         './manifest.json',
+        './icons/icon-192.png',
+        './icons/icon-512.png',
         './icons/icon-192.svg',
         './icons/icon-512.svg'
       ]).catch((err) => {

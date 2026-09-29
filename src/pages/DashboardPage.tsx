@@ -6,9 +6,12 @@ import { HowItWorksModal } from '../components/common/HowItWorksModal';
 import { GameImage } from '../components/common/GameImage';
 import { 
   Building2, Crosshair, Newspaper, Target, 
-  ArrowRight, PlusCircle, CheckCircle, Flame, ShieldAlert, HelpCircle, Store 
+  ArrowRight, PlusCircle, CheckCircle, Flame, ShieldAlert, HelpCircle, Store,
+  Smartphone, Download
 } from 'lucide-react';
 import { INITIAL_BUSINESS_TYPES, INITIAL_ACTION_TYPES } from '../lib/mockData';
+import { usePWAInstall } from '../hooks/usePWAInstall';
+import { PWAInstallModal } from '../components/common/PWAInstallModal';
 
 export const DashboardPage: React.FC = () => {
   const { 
@@ -18,6 +21,7 @@ export const DashboardPage: React.FC = () => {
   } = useGame();
 
   const [isManualOpen, setIsManualOpen] = useState(false);
+  const { isInstallable, isStandalone, showIOSInstructions, setShowIOSInstructions, installApp } = usePWAInstall();
 
   if (!character) return null;
 
@@ -365,10 +369,43 @@ export const DashboardPage: React.FC = () => {
         </div>
       )}
 
+      {/* Card de Instalação PWA no Celular (quando ainda não instalado) */}
+      {!isStandalone && isInstallable && (
+        <div className="bg-gradient-to-r from-noir-900 via-noir-850 to-noir-900 border border-gold-500/40 rounded-lg p-4 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded bg-gold-500/10 border border-gold-500/40 flex items-center justify-center text-gold-400 shrink-0">
+              <Smartphone className="w-5 h-5" />
+            </div>
+            <div>
+              <h4 className="font-display font-bold text-sm text-gold-400">
+                Baixar Aplicativo 1929 no Celular
+              </h4>
+              <p className="text-xs text-noir-400 mt-0.5">
+                Instale o jogo na tela de início para jogar em tela cheia e ter acesso mais rápido ao seu império.
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={installApp}
+            className="w-full sm:w-auto shrink-0 flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 text-noir-950 font-bold text-xs rounded shadow-gold-subtle active:scale-95 transition-all"
+          >
+            <Download className="w-4 h-4" />
+            <span>Instalar App</span>
+          </button>
+        </div>
+      )}
+
       {/* Modal Manual de Regras e Como Funciona */}
       <HowItWorksModal
         isOpen={isManualOpen}
         onClose={() => setIsManualOpen(false)}
+      />
+
+      {/* Modal Instruções PWA iOS */}
+      <PWAInstallModal
+        isOpen={showIOSInstructions}
+        onClose={() => setShowIOSInstructions(false)}
       />
     </div>
   );

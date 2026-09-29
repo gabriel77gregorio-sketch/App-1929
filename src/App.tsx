@@ -4,6 +4,7 @@ import { TopBar } from './components/common/TopBar';
 import { BottomNav } from './components/common/BottomNav';
 import { NotificationToast } from './components/common/NotificationToast';
 import { WelcomeBackModal } from './components/dashboard/WelcomeBackModal';
+import { PWAInstallBanner } from './components/common/PWAInstallBanner';
 
 // Telas
 import { LandingPage } from './pages/LandingPage';
@@ -37,6 +38,9 @@ export const App: React.FC = () => {
 
       {/* Modal 'Enquanto você estava fora...' */}
       <WelcomeBackModal />
+
+      {/* Banner de Instalação PWA no Celular */}
+      <PWAInstallBanner />
 
       {/* Barra Superior com Recursos */}
       <TopBar />

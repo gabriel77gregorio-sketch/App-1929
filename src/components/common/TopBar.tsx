@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useGame } from '../../context/GameContext';
 import { Coins, Award, Users, Skull, Calendar, ShieldAlert, HelpCircle } from 'lucide-react';
 import { HowItWorksModal } from './HowItWorksModal';
+import { PWAInstallButton } from './PWAInstallBanner';
 
 export const TopBar: React.FC = () => {
   const { character, claimDailyReward, setScreen } = useGame();
@@ -94,6 +95,9 @@ export const TopBar: React.FC = () => {
               {character.nickname.slice(0, 1).toUpperCase()}
             </div>
           </div>
+
+          {/* Botão de Instalação PWA */}
+          <PWAInstallButton />
 
           {/* Botão Manual / Como Funciona */}
           <button

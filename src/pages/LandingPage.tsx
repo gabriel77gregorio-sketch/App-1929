@@ -1,12 +1,15 @@
 import React from 'react';
 import { useGame } from '../context/GameContext';
 import { Button } from '../components/common/Button';
-import { ShieldCheck, Zap, Smartphone, ArrowRight, Play } from 'lucide-react';
+import { ShieldCheck, Zap, Smartphone, ArrowRight, Play, Download } from 'lucide-react';
+import { usePWAInstall } from '../hooks/usePWAInstall';
+import { PWAInstallModal } from '../components/common/PWAInstallModal';
 
 import heroImage from '../assets/hero.png';
 
 export const LandingPage: React.FC = () => {
   const { setScreen } = useGame();
+  const { isInstallable, isStandalone, showIOSInstructions, setShowIOSInstructions, installApp } = usePWAInstall();
 
   return (
     <div className="min-h-screen bg-noir-950 flex flex-col justify-between relative overflow-hidden select-none">
@@ -69,20 +72,35 @@ export const LandingPage: React.FC = () => {
             Construa seu império.
           </p>
 
-          <Button
-            size="lg"
-            fullWidth
-            variant="primary"
-            onClick={() => setScreen('character_creation')}
-            className="text-base sm:text-lg py-3.5 shadow-gold-glow animate-gold-pulse"
-          >
-            <span>COMEÇAR AGORA</span>
-            <ArrowRight className="w-5 h-5 ml-2" />
-          </Button>
+          <div className="space-y-2.5">
+            <Button
+              size="lg"
+              fullWidth
+              variant="primary"
+              onClick={() => setScreen('character_creation')}
+              className="text-base sm:text-lg py-3.5 shadow-gold-glow animate-gold-pulse"
+            >
+              <span>COMEÇAR AGORA</span>
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
+
+            {!isStandalone && isInstallable && (
+              <Button
+                size="md"
+                fullWidth
+                variant="secondary"
+                onClick={installApp}
+                className="text-xs sm:text-sm py-2.5 border-gold-500/50 text-gold-400 hover:text-gold-300"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                <span>BAIXAR APP NO CELULAR</span>
+              </Button>
+            )}
+          </div>
 
           <div className="mt-4 pt-4 border-t border-noir-800 text-[11px] sm:text-xs text-noir-400 flex items-center justify-center gap-1.5">
             <Play className="w-3 h-3 text-gold-500" />
-            <span>Sem downloads. Seu império continua crescendo enquanto você estiver fora.</span>
+            <span>{isStandalone ? 'Aplicativo instalado. Seu império continua crescendo em segundo plano.' : 'Instale como app ou jogue no navegador sem cadastro burocrático.'}</span>
           </div>
         </div>
       </div>
@@ -90,9 +108,13 @@ export const LandingPage: React.FC = () => {
       {/* Rodapé e Características PWA */}
       <div className="relative z-10 pb-8 px-6 max-w-xl mx-auto w-full">
         <div className="grid grid-cols-3 gap-2 text-center text-noir-400 text-[11px] sm:text-xs">
-          <div className="flex flex-col items-center gap-1 p-2 bg-noir-900/40 rounded border border-noir-800/80">
+          <div 
+            onClick={!isStandalone ? installApp : undefined}
+            className={`flex flex-col items-center gap-1 p-2 bg-noir-900/40 rounded border border-noir-800/80 transition-all ${!isStandalone ? 'cursor-pointer hover:border-gold-500/50 hover:bg-noir-900/80 active:scale-95' : ''}`}
+            title={!isStandalone ? "Toque para instalar o aplicativo no celular" : "Aplicativo já instalado"}
+          >
             <Smartphone className="w-4 h-4 text-gold-500" />
-            <span>PWA Celular</span>
+            <span className="font-medium text-paper-200">{isStandalone ? 'Instalado' : 'Instalar PWA'}</span>
           </div>
           <div className="flex flex-col items-center gap-1 p-2 bg-noir-900/40 rounded border border-noir-800/80">
             <Zap className="w-4 h-4 text-gold-500" />
@@ -104,6 +126,11 @@ export const LandingPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <PWAInstallModal
+        isOpen={showIOSInstructions}
+        onClose={() => setShowIOSInstructions(false)}
+      />
     </div>
   );
 };
