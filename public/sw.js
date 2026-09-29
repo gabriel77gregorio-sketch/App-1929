@@ -1,17 +1,18 @@
 // 1929 PWA Service Worker
-const CACHE_NAME = '1929-cache-v1';
-const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icons/icon-192.svg',
-  '/icons/icon-512.svg'
-];
+const CACHE_NAME = '1929-cache-v3';
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(STATIC_ASSETS);
+      return cache.addAll([
+        './',
+        './index.html',
+        './manifest.json',
+        './icons/icon-192.svg',
+        './icons/icon-512.svg'
+      ]).catch((err) => {
+        console.warn('SW pre-cache warning:', err);
+      });
     })
   );
   self.skipWaiting();
@@ -33,8 +34,8 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Ignora requests que não sejam GET ou chamadas da API Supabase (que devem ser online)
-  if (event.request.method !== 'GET' || event.request.url.includes('supabase.co')) {
+  // Ignora requests que não sejam GET ou chamadas de API externa
+  if (event.request.method !== 'GET' || event.request.url.includes('supabase.co') || event.request.url.includes('unsplash.com')) {
     return;
   }
 
@@ -55,7 +56,7 @@ self.addEventListener('fetch', (event) => {
       }).catch(() => {
         // Fallback offline para navegação
         if (event.request.mode === 'navigate') {
-          return caches.match('/index.html');
+          return caches.match('./index.html') || caches.match('/');
         }
       });
     })

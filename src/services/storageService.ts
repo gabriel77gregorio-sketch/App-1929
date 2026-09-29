@@ -1,4 +1,4 @@
-// Serviço de armazenamento e persistência com fallback local
+// Serviço de armazenamento e persistência com fallback local seguro
 import { 
   Character, PlayerBusiness, PlayerAction, InventoryItem, 
   PlayerMission, NewspaperArticle, Proposal, GameEvent, Territory, Family 
@@ -23,10 +23,40 @@ const STORAGE_KEYS = {
   LAST_SEEN: '1929_last_seen',
 };
 
+// Funções seguras de acesso ao localStorage (evita crashes em iframes, modo anônimo estrito ou bloqueio de cookies)
+const safeGetItem = (key: string): string | null => {
+  try {
+    return typeof window !== 'undefined' && window.localStorage ? window.localStorage.getItem(key) : null;
+  } catch (e) {
+    console.warn(`[1929 Storage] Falha ao ler "${key}":`, e);
+    return null;
+  }
+};
+
+const safeSetItem = (key: string, value: string): void => {
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      window.localStorage.setItem(key, value);
+    }
+  } catch (e) {
+    console.warn(`[1929 Storage] Falha ao gravar "${key}":`, e);
+  }
+};
+
+const safeRemoveItem = (key: string): void => {
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      window.localStorage.removeItem(key);
+    }
+  } catch (e) {
+    console.warn(`[1929 Storage] Falha ao remover "${key}":`, e);
+  }
+};
+
 export const storageService = {
   // Carrega ou inicializa o personagem local
   getCharacter(): Character | null {
-    const raw = localStorage.getItem(STORAGE_KEYS.CHARACTER);
+    const raw = safeGetItem(STORAGE_KEYS.CHARACTER);
     if (!raw) return null;
     try {
       return JSON.parse(raw);
@@ -36,16 +66,16 @@ export const storageService = {
   },
 
   saveCharacter(char: Character): void {
-    localStorage.setItem(STORAGE_KEYS.CHARACTER, JSON.stringify(char));
+    safeSetItem(STORAGE_KEYS.CHARACTER, JSON.stringify(char));
   },
 
   clearCharacter(): void {
-    localStorage.removeItem(STORAGE_KEYS.CHARACTER);
+    safeRemoveItem(STORAGE_KEYS.CHARACTER);
   },
 
   // Negócios do jogador
   getBusinesses(): PlayerBusiness[] {
-    const raw = localStorage.getItem(STORAGE_KEYS.BUSINESSES);
+    const raw = safeGetItem(STORAGE_KEYS.BUSINESSES);
     if (!raw) return [];
     try {
       return JSON.parse(raw);
@@ -55,12 +85,12 @@ export const storageService = {
   },
 
   saveBusinesses(businesses: PlayerBusiness[]): void {
-    localStorage.setItem(STORAGE_KEYS.BUSINESSES, JSON.stringify(businesses));
+    safeSetItem(STORAGE_KEYS.BUSINESSES, JSON.stringify(businesses));
   },
 
   // Ações do jogador
   getActions(): PlayerAction[] {
-    const raw = localStorage.getItem(STORAGE_KEYS.ACTIONS);
+    const raw = safeGetItem(STORAGE_KEYS.ACTIONS);
     if (!raw) return [];
     try {
       return JSON.parse(raw);
@@ -70,12 +100,12 @@ export const storageService = {
   },
 
   saveActions(actions: PlayerAction[]): void {
-    localStorage.setItem(STORAGE_KEYS.ACTIONS, JSON.stringify(actions));
+    safeSetItem(STORAGE_KEYS.ACTIONS, JSON.stringify(actions));
   },
 
   // Inventário
   getInventory(): InventoryItem[] {
-    const raw = localStorage.getItem(STORAGE_KEYS.INVENTORY);
+    const raw = safeGetItem(STORAGE_KEYS.INVENTORY);
     if (!raw) return [];
     try {
       return JSON.parse(raw);
@@ -85,14 +115,13 @@ export const storageService = {
   },
 
   saveInventory(inv: InventoryItem[]): void {
-    localStorage.setItem(STORAGE_KEYS.INVENTORY, JSON.stringify(inv));
+    safeSetItem(STORAGE_KEYS.INVENTORY, JSON.stringify(inv));
   },
 
   // Missões
   getPlayerMissions(): PlayerMission[] {
-    const raw = localStorage.getItem(STORAGE_KEYS.MISSIONS);
+    const raw = safeGetItem(STORAGE_KEYS.MISSIONS);
     if (!raw) {
-      // Inicializa com as missões padrão
       const initial = INITIAL_MISSIONS.map(m => ({
         id: `pm-${m.id}`,
         character_id: 'local-char',
@@ -113,12 +142,12 @@ export const storageService = {
   },
 
   savePlayerMissions(missions: PlayerMission[]): void {
-    localStorage.setItem(STORAGE_KEYS.MISSIONS, JSON.stringify(missions));
+    safeSetItem(STORAGE_KEYS.MISSIONS, JSON.stringify(missions));
   },
 
   // Gazeta da Capital (Notícias)
   getArticles(): NewspaperArticle[] {
-    const raw = localStorage.getItem(STORAGE_KEYS.ARTICLES);
+    const raw = safeGetItem(STORAGE_KEYS.ARTICLES);
     if (!raw) {
       this.saveArticles(INITIAL_ARTICLES);
       return INITIAL_ARTICLES;
@@ -131,7 +160,7 @@ export const storageService = {
   },
 
   saveArticles(articles: NewspaperArticle[]): void {
-    localStorage.setItem(STORAGE_KEYS.ARTICLES, JSON.stringify(articles));
+    safeSetItem(STORAGE_KEYS.ARTICLES, JSON.stringify(articles));
   },
 
   addArticle(article: Omit<NewspaperArticle, 'id' | 'created_at'>): NewspaperArticle {
@@ -142,7 +171,6 @@ export const storageService = {
       created_at: new Date().toISOString()
     };
     articles.unshift(newArt);
-    // Mantém no máximo 50 notícias no jornal
     const trimmed = articles.slice(0, 50);
     this.saveArticles(trimmed);
     return newArt;
@@ -150,7 +178,7 @@ export const storageService = {
 
   // Famílias
   getFamilies(): Family[] {
-    const raw = localStorage.getItem(STORAGE_KEYS.FAMILIES);
+    const raw = safeGetItem(STORAGE_KEYS.FAMILIES);
     if (!raw) {
       this.saveFamilies(INITIAL_FAMILIES);
       return INITIAL_FAMILIES;
@@ -163,12 +191,12 @@ export const storageService = {
   },
 
   saveFamilies(fams: Family[]): void {
-    localStorage.setItem(STORAGE_KEYS.FAMILIES, JSON.stringify(fams));
+    safeSetItem(STORAGE_KEYS.FAMILIES, JSON.stringify(fams));
   },
 
   // Territórios
   getTerritories(): Territory[] {
-    const raw = localStorage.getItem(STORAGE_KEYS.TERRITORIES);
+    const raw = safeGetItem(STORAGE_KEYS.TERRITORIES);
     if (!raw) {
       this.saveTerritories(INITIAL_TERRITORIES);
       return INITIAL_TERRITORIES;
@@ -181,14 +209,13 @@ export const storageService = {
   },
 
   saveTerritories(terrs: Territory[]): void {
-    localStorage.setItem(STORAGE_KEYS.TERRITORIES, JSON.stringify(terrs));
+    safeSetItem(STORAGE_KEYS.TERRITORIES, JSON.stringify(terrs));
   },
 
   // Propostas de negociação
   getProposals(): Proposal[] {
-    const raw = localStorage.getItem(STORAGE_KEYS.PROPOSALS);
+    const raw = safeGetItem(STORAGE_KEYS.PROPOSALS);
     if (!raw) {
-      // Proposta de exemplo inicial de um rival
       const defaultProposals: Proposal[] = [
         {
           id: 'prop-1',
@@ -218,12 +245,12 @@ export const storageService = {
   },
 
   saveProposals(props: Proposal[]): void {
-    localStorage.setItem(STORAGE_KEYS.PROPOSALS, JSON.stringify(props));
+    safeSetItem(STORAGE_KEYS.PROPOSALS, JSON.stringify(props));
   },
 
   // Eventos
   getEvents(): GameEvent[] {
-    const raw = localStorage.getItem(STORAGE_KEYS.EVENTS);
+    const raw = safeGetItem(STORAGE_KEYS.EVENTS);
     if (!raw) {
       this.saveEvents(INITIAL_EVENTS);
       return INITIAL_EVENTS;
@@ -236,15 +263,15 @@ export const storageService = {
   },
 
   saveEvents(evts: GameEvent[]): void {
-    localStorage.setItem(STORAGE_KEYS.EVENTS, JSON.stringify(evts));
+    safeSetItem(STORAGE_KEYS.EVENTS, JSON.stringify(evts));
   },
 
   // Registro de último acesso
   getLastSeen(): string {
-    return localStorage.getItem(STORAGE_KEYS.LAST_SEEN) || new Date().toISOString();
+    return safeGetItem(STORAGE_KEYS.LAST_SEEN) || new Date().toISOString();
   },
 
   updateLastSeen(): void {
-    localStorage.setItem(STORAGE_KEYS.LAST_SEEN, new Date().toISOString());
+    safeSetItem(STORAGE_KEYS.LAST_SEEN, new Date().toISOString());
   }
 };
