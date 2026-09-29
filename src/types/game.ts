@@ -339,3 +339,21 @@ export interface SeasonData {
   rewards: SeasonReward[];
 }
 
+// === SISTEMA VIRAL DE INDICAÇÃO ("INDIQUE 3 AMIGOS") ===
+
+export interface ReferralInvite {
+  id: string;
+  friend_name: string;
+  date: string;
+  reward_claimed: boolean;
+}
+
+export interface ReferralData {
+  my_code: string;
+  referred_by: string | null;
+  referrals: ReferralInvite[];
+  target_goal: number;
+  milestone_claimed: boolean;
+}
+
+

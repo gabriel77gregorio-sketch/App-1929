@@ -2,12 +2,13 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { 
   Character, PlayerBusiness, PlayerAction, InventoryItem, 
   PlayerMission, NewspaperArticle, Proposal, GameEvent, Territory, Family, OfflineSummary, CharacterStyle,
-  RivalTarget, RivalAttack, SeasonData, PlayerDefense, SabotageTypeId 
+  RivalTarget, RivalAttack, SeasonData, PlayerDefense, SabotageTypeId, ReferralData 
 } from '../types/game';
 import { storageService } from '../services/storageService';
 import { gameService } from '../services/gameService';
 import { authService, AuthUser } from '../services/authService';
 import { rivalService } from '../services/rivalService';
+import { referralService } from '../services/referralService';
 import { INITIAL_BUSINESS_TYPES, INITIAL_DISTRICTS } from '../lib/mockData';
 
 export type Screen = 
@@ -89,6 +90,12 @@ interface GameContextType {
   upgradeSafe: () => void;
   claimSeasonReward: (level: number) => void;
   refreshRivals: () => void;
+
+  // Sistema Viral de Indicação ("Indique 3 Amigos")
+  referralData: ReferralData;
+  applyReferralCode: (code: string) => Promise<{ success: boolean; message: string }>;
+  claimReferralMilestone: () => void;
+  simulateFriendInvite: (customName?: string) => void;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -114,6 +121,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [attackLogs, setAttackLogs] = useState<RivalAttack[]>([]);
   const [playerDefense, setPlayerDefense] = useState<PlayerDefense>({ guards_count: 1, safe_level: 1 });
   const [season, setSeason] = useState<SeasonData>(rivalService.getSeasonData());
+  const [referralData, setReferralData] = useState<ReferralData>(referralService.getReferralData());
 
   const notify = useCallback((message: string, type: 'success' | 'warning' | 'error' | 'info' = 'info') => {
     const id = 'notif-' + Date.now() + '-' + Math.random();
@@ -151,6 +159,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setAttackLogs(rivalService.getAttackLogs());
     setPlayerDefense(rivalService.getPlayerDefense());
     setSeason(rivalService.getSeasonData());
+    setReferralData(referralService.getReferralData(char));
 
     if (char) {
       const summary = gameService.getOfflineSummary(char);
@@ -168,6 +177,12 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     try {
       const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+      if (params && params.has('ref')) {
+        const refCode = params.get('ref');
+        if (refCode) {
+          referralService.setPendingRef(refCode);
+        }
+      }
       if (params && (params.has('onboarding') || params.has('reset'))) {
         storageService.clearAll();
         setCharacter(null);
@@ -210,7 +225,16 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Criação de personagem
   const createCharacter = (name: string, nickname: string, origin: string, style: CharacterStyle) => {
-    const newChar = gameService.createCharacter(name, nickname, origin, style);
+    let newChar = gameService.createCharacter(name, nickname, origin, style);
+    const pendingRef = referralService.getPendingRef();
+    if (pendingRef) {
+      const refRes = referralService.applyReferralCode(newChar, pendingRef);
+      if (refRes.success) {
+        newChar = refRes.character;
+        setReferralData(refRes.referralData);
+        notify(`Convite aceito! Você recebeu $1.000 réis e 1 Caixa de Whisky do seu padrinho (${pendingRef})!`, 'success');
+      }
+    }
     setCharacter(newChar);
     reloadData();
     setScreen('dashboard');
@@ -228,7 +252,17 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const res = gameService.createCharacterWithFirstBusiness(
       name, nickname, origin, style, firstBusinessName, firstDistrictId
     );
-    setCharacter(res.character);
+    let finalChar = res.character;
+    const pendingRef = referralService.getPendingRef();
+    if (pendingRef) {
+      const refRes = referralService.applyReferralCode(finalChar, pendingRef);
+      if (refRes.success) {
+        finalChar = refRes.character;
+        setReferralData(refRes.referralData);
+        notify(`Convite aceito! Você recebeu $1.000 réis e 1 Caixa de Whisky do seu padrinho (${pendingRef})!`, 'success');
+      }
+    }
+    setCharacter(finalChar);
     reloadData();
     setScreen('dashboard');
     notify(`Seu nome circula por Santa Augusta, ${nickname}. "${res.business.custom_name}" abriu as portas!`, 'success');
@@ -599,6 +633,45 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setRivals(rivalService.getRivals());
   };
 
+  // Sistema Viral de Indicação ("Indique 3 Amigos")
+  const applyReferralCode = async (code: string): Promise<{ success: boolean; message: string }> => {
+    if (!character) return { success: false, message: 'Personagem não encontrado.' };
+    const res = referralService.applyReferralCode(character, code);
+    setCharacter(res.character);
+    setReferralData(res.referralData);
+    reloadData();
+    if (res.success) {
+      notify(res.message, 'success');
+    } else {
+      notify(res.message, 'error');
+    }
+    return { success: res.success, message: res.message };
+  };
+
+  const claimReferralMilestone = () => {
+    if (!character) return;
+    const res = referralService.claimMilestone3(character);
+    if (res.success) {
+      setCharacter(res.character);
+      setReferralData(res.referralData);
+      reloadData();
+      notify(res.message, 'success');
+    } else {
+      notify(res.message, 'error');
+    }
+  };
+
+  const simulateFriendInvite = (customName?: string) => {
+    if (!character) return;
+    const res = referralService.simulateFriendJoined(character, customName);
+    if (res.success) {
+      setCharacter(res.character);
+      setReferralData(res.referralData);
+      reloadData();
+      notify(res.message, 'success');
+    }
+  };
+
   return (
     <GameContext.Provider
       value={{
@@ -646,7 +719,11 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         hireGuard,
         upgradeSafe,
         claimSeasonReward,
-        refreshRivals
+        refreshRivals,
+        referralData,
+        applyReferralCode,
+        claimReferralMilestone,
+        simulateFriendInvite
       }}
     >
       {children}

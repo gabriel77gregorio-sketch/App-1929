@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { useGame } from '../../context/GameContext';
-import { Coins, Award, Users, Skull, Calendar, ShieldAlert, HelpCircle, RotateCcw, Cloud, CheckCircle2 } from 'lucide-react';
+import { Coins, Award, Users, Skull, Calendar, ShieldAlert, HelpCircle, RotateCcw, Cloud, CheckCircle2, Gift } from 'lucide-react';
 import { HowItWorksModal } from './HowItWorksModal';
 import { PWAInstallButton } from './PWAInstallBanner';
 import { GoogleLinkModal } from './GoogleLinkModal';
+import { ReferralModal } from './ReferralModal';
 
 export const TopBar: React.FC = () => {
-  const { character, claimDailyReward, setScreen, resetGameData } = useGame();
+  const { character, claimDailyReward, setScreen, resetGameData, referralData } = useGame();
   const [isManualOpen, setIsManualOpen] = useState(false);
   const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);
+  const [isReferralModalOpen, setIsReferralModalOpen] = useState(false);
 
   const handleResetGame = () => {
     if (window.confirm('Deseja reiniciar o jogo e apagar o progresso atual para testar o novo onboarding de 21 páginas?')) {
@@ -125,6 +127,19 @@ export const TopBar: React.FC = () => {
             <ShieldAlert className="w-4 h-4" />
           </button>
 
+          {/* Botão Indique Amigos (Viral) */}
+          <button
+            onClick={() => setIsReferralModalOpen(true)}
+            className="flex items-center gap-1.5 px-2 py-1 rounded bg-gradient-to-r from-gold-600/20 to-amber-500/20 hover:from-gold-600/30 hover:to-amber-500/30 border border-gold-500/50 text-gold-300 text-xs font-mono font-medium transition-all shadow-gold-subtle cursor-pointer"
+            title="Convoque Comparsas: Indique 3 amigos e ganhe até $9.500 réis"
+          >
+            <Gift className="w-3.5 h-3.5 text-gold-400" />
+            <span className="hidden sm:inline text-[11px]">Indicar</span>
+            <span className="bg-gold-500 text-noir-950 text-[10px] font-bold px-1 rounded-sm leading-tight">
+              {referralData?.referrals.length || 0}/3
+            </span>
+          </button>
+
           {/* Botão Vincular / Status Google */}
           {character.is_cloud_synced ? (
             <button
@@ -169,6 +184,12 @@ export const TopBar: React.FC = () => {
       <GoogleLinkModal
         isOpen={isGoogleModalOpen}
         onClose={() => setIsGoogleModalOpen(false)}
+      />
+
+      {/* Modal Convoque Comparsas (Indicação Viral) */}
+      <ReferralModal
+        isOpen={isReferralModalOpen}
+        onClose={() => setIsReferralModalOpen(false)}
       />
     </header>
   );

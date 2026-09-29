@@ -7,21 +7,23 @@ import { GameImage } from '../components/common/GameImage';
 import { 
   Building2, Crosshair, Newspaper, Target, 
   ArrowRight, PlusCircle, CheckCircle, Flame, ShieldAlert, HelpCircle, Store,
-  Smartphone, Download, Sparkles 
+  Smartphone, Download, Sparkles, Gift, Share2 
 } from 'lucide-react';
 import { INITIAL_BUSINESS_TYPES, INITIAL_ACTION_TYPES } from '../lib/mockData';
 import { usePWAInstall } from '../hooks/usePWAInstall';
 import { PWAInstallModal } from '../components/common/PWAInstallModal';
+import { ReferralModal } from '../components/common/ReferralModal';
 
 export const DashboardPage: React.FC = () => {
   const { 
     character, businesses, activeAction, 
     articles, missions, setScreen, 
     collectBusinessRevenue, completeAction, claimMissionReward,
-    season, attackLogs
+    season, attackLogs, referralData
   } = useGame();
 
   const [isManualOpen, setIsManualOpen] = useState(false);
+  const [isReferralModalOpen, setIsReferralModalOpen] = useState(false);
   const { isInstallable, isStandalone, showIOSInstructions, setShowIOSInstructions, installApp } = usePWAInstall();
 
   if (!character) return null;
@@ -143,6 +145,39 @@ export const DashboardPage: React.FC = () => {
           </div>
         );
       })()}
+
+      {/* Card Viral: Convoque 3 Comparsas (Rede do Padrinho) */}
+      <div className="bg-gradient-to-r from-noir-900 via-noir-850 to-noir-900 border border-gold-500/40 rounded-lg p-3.5 sm:p-4 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-3 relative overflow-hidden">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-gold-500/20 to-amber-600/30 border border-gold-500/50 flex items-center justify-center text-gold-400 shrink-0">
+            <Gift className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-gold-400 font-bold">
+                Rede do Padrinho • Convoque 3 Aliados
+              </span>
+              <span className="text-[10px] font-mono bg-gold-500/20 text-gold-300 px-1.5 rounded font-bold">
+                {referralData?.referrals.length || 0}/3
+              </span>
+            </div>
+            <h4 className="font-serif-vintage font-bold text-sm text-paper-100">
+              Indique amigos e ganhe até $9.500 réis + Título "O Padrinho"
+            </h4>
+            <p className="text-[11px] text-noir-400 font-serif italic">
+              Seu comparsa ganha $1.000 réis e 1 Caixa de Whisky Escocês ao usar seu token.
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={() => setIsReferralModalOpen(true)}
+          className="w-full sm:w-auto px-4 py-2 rounded bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 text-noir-950 font-mono font-bold text-xs uppercase tracking-wider transition-all shadow-gold-subtle flex items-center justify-center gap-1.5 shrink-0 cursor-pointer"
+        >
+          <Share2 className="w-3.5 h-3.5" />
+          <span>Convidar Aliados</span>
+        </button>
+      </div>
 
       {/* 2. Seu Império (Negócios) */}
       <div className="space-y-3">
@@ -465,6 +500,12 @@ export const DashboardPage: React.FC = () => {
       <PWAInstallModal
         isOpen={showIOSInstructions}
         onClose={() => setShowIOSInstructions(false)}
+      />
+
+      {/* Modal Convoque Comparsas (Indicação Viral) */}
+      <ReferralModal
+        isOpen={isReferralModalOpen}
+        onClose={() => setIsReferralModalOpen(false)}
       />
     </div>
   );
