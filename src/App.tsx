@@ -5,6 +5,7 @@ import { BottomNav } from './components/common/BottomNav';
 import { NotificationToast } from './components/common/NotificationToast';
 import { WelcomeBackModal } from './components/dashboard/WelcomeBackModal';
 import { PWAInstallBanner } from './components/common/PWAInstallBanner';
+import { ActionOutcomeModal } from './components/common/ActionOutcomeModal';
 
 // Telas
 import { LandingPage } from './pages/LandingPage';
@@ -21,7 +22,7 @@ import { AdminPage } from './pages/AdminPage';
 import { Sparkles } from 'lucide-react';
 
 export const App: React.FC = () => {
-  const { screen, character, resetGameData } = useGame();
+  const { screen, character, resetGameData, completedActionReport, dismissActionReport } = useGame();
 
   // Se não tem personagem ou está na landing/criação, exibe as telas dedicadas
   if (screen === 'landing') {
@@ -39,6 +40,15 @@ export const App: React.FC = () => {
 
       {/* Modal 'Enquanto você estava fora...' */}
       <WelcomeBackModal />
+
+      {/* Modal Retrô de Desfecho da Ação / Cinema 1929 */}
+      {completedActionReport && (
+        <ActionOutcomeModal
+          isOpen={true}
+          onClose={dismissActionReport}
+          action={completedActionReport}
+        />
+      )}
 
       {/* Banner de Instalação PWA no Celular */}
       <PWAInstallBanner />

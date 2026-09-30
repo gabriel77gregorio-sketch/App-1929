@@ -3,6 +3,7 @@ import { useGame } from '../context/GameContext';
 import { Button } from '../components/common/Button';
 import { CountdownTimer } from '../components/common/CountdownTimer';
 import { GameImage } from '../components/common/GameImage';
+import { RetroActionScene } from '../components/common/RetroActionScene';
 import { INITIAL_ACTION_TYPES, getActionButtonLabel } from '../lib/mockData';
 import { ActionType, ActionCategory } from '../types/game';
 import { 
@@ -91,71 +92,82 @@ export const ActionsPage: React.FC = () => {
         </p>
       </div>
 
-      {/* Operação Ativa / Em Andamento com Visual Destacado */}
-      {activeAction && (
-        <div className={`rounded-lg shadow-2xl relative overflow-hidden border-2 transition-all ${
-          isActionReady
-            ? 'bg-gradient-to-b from-emerald-950/30 via-noir-900 to-noir-900 border-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.2)]'
-            : 'bg-noir-900 border-gold-500/60 shadow-gold-subtle'
-        }`}>
-          {/* Banner Ilustrado da Operação Ativa com GameImage */}
-          <div className="relative w-full h-36 sm:h-44 overflow-hidden">
-            <GameImage
-              src={activeAction.action_type?.illustration ?? activeActionType?.illustration}
-              alt={activeAction.action_type?.name ?? 'Operação em andamento'}
-              theme={activeStyle.theme}
-              iconType={activeStyle.iconType}
-              aspect="w-full h-full"
+      {/* Operação Ativa / Em Andamento com Cena Retrô Cinematográfica */}
+      {activeAction && (() => {
+        const atype = activeAction.action_type || activeActionType;
+        const isCoffee = atype?.slug === 'transporte_fardo' || atype?.illustration?.includes('preso_cafe');
+        const imageSrc = isCoffee ? '/images/actions/preso_cafe.jpg' : (atype?.illustration || '/images/actions/preso_cafe.jpg');
+        const hasBaked = imageSrc === '/images/actions/preso_cafe.jpg';
+
+        return (
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Crosshair className="w-4 h-4 text-gold-400" />
+                <span className="text-xs font-mono uppercase tracking-widest text-gold-400 font-bold">
+                  Operação nas Ruas: {atype?.name}
+                </span>
+              </div>
+              {isActionReady ? (
+                <span className="text-[11px] font-mono font-bold text-emerald-400 animate-pulse bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-500/40">
+                  ✓ Pronta para Resolução
+                </span>
+              ) : (
+                <span className="text-[11px] font-mono text-noir-400">
+                  Nas ruas de Santa Augusta
+                </span>
+              )}
+            </div>
+
+            <RetroActionScene
+              imageSrc={imageSrc}
+              imageAlt={atype?.name || 'Operação em andamento'}
+              narrativeText={
+                isActionReady 
+                  ? 'A movimentação foi concluída. Seus homens aguardam o sinal para abrir os cofres e conferir o desfecho.'
+                  : `Seus homens estão nas ruas movimentando a operação: "${atype?.name}". Cautela com as rondas policiais.`
+              }
+              status={isActionReady ? 'ready' : 'in_progress'}
+              countdownTimer={
+                isActionReady ? (
+                  <Button
+                    variant="success"
+                    fullWidth
+                    size="lg"
+                    onClick={() => completeAction(activeAction.id)}
+                    className="animate-bounce py-3 min-h-[46px] text-xs sm:text-sm font-black shadow-lg"
+                  >
+                    <CheckCircle2 className="w-5 h-5 mr-2" />
+                    Receber Relatório &amp; Ver Desfecho
+                  </Button>
+                ) : (
+                  <div className="w-full">
+                    <CountdownTimer
+                      targetDate={activeAction.finish_at}
+                      startDate={activeAction.started_at}
+                    />
+                  </div>
+                )
+              }
+              hasBakedText={hasBaked && !isActionReady}
+              onContinue={isActionReady ? () => completeAction(activeAction.id) : undefined}
             />
 
-            {/* Badges superiores sobrepostos na imagem */}
-            <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between gap-2 z-10">
-              <span className="text-[10px] font-mono uppercase tracking-widest text-gold-400 bg-noir-950/90 px-2 py-0.5 rounded border border-gold-500/40 font-bold">
-                Operação em Andamento
-              </span>
-              {isActionReady ? (
-                <span className="text-[11px] font-mono font-bold text-emerald-300 bg-emerald-950/90 px-2.5 py-0.5 rounded border border-emerald-500 animate-pulse shadow">
-                  ✓ Pronta para Resolução!
-                </span>
-              ) : (
-                <span className="text-[11px] font-mono text-noir-300 bg-noir-950/90 px-2 py-0.5 rounded border border-noir-700">
-                  Na calada da noite...
-                </span>
-              )}
-            </div>
+            {hasBaked && isActionReady && (
+              <Button
+                variant="success"
+                fullWidth
+                size="lg"
+                onClick={() => completeAction(activeAction.id)}
+                className="animate-bounce py-3 min-h-[46px] text-xs sm:text-sm font-black shadow-lg"
+              >
+                <CheckCircle2 className="w-5 h-5 mr-2" />
+                Receber Relatório &amp; Ver Desfecho
+              </Button>
+            )}
           </div>
-
-          {/* Conteúdo textual */}
-          <div className="p-3.5 sm:p-4">
-            <h3 className="font-serif-vintage font-bold text-base sm:text-lg text-paper-100 mb-1">
-              {activeAction.action_type?.name}
-            </h3>
-            <p className="text-xs text-paper-300 font-serif italic mb-3">
-              {activeAction.action_type?.description}
-            </p>
-
-            <div className="pt-2 border-t border-noir-800">
-              {isActionReady ? (
-                <Button
-                  variant="success"
-                  fullWidth
-                  size="lg"
-                  onClick={() => completeAction(activeAction.id)}
-                  className="animate-bounce py-3 min-h-[46px] text-xs sm:text-sm font-black shadow-lg"
-                >
-                  <CheckCircle2 className="w-5 h-5 mr-2" />
-                  Receber Relatório &amp; Recolher Recompensas
-                </Button>
-              ) : (
-                <CountdownTimer
-                  targetDate={activeAction.finish_at}
-                  startDate={activeAction.started_at}
-                />
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* Filtros de Categoria (Rolagem horizontal suave para mobile com cores) */}
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">

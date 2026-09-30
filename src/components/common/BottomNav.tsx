@@ -1,8 +1,7 @@
 import React from 'react';
 import { useGame, Screen } from '../../context/GameContext';
 import { 
-  Building2, Crosshair, MapPin, Store, 
-  Newspaper, Users, Home 
+  Building2, Crosshair, MapPin, Store, Home 
 } from 'lucide-react';
 
 interface NavItem {
@@ -13,12 +12,11 @@ interface NavItem {
 }
 
 export const BottomNav: React.FC = () => {
-  const { screen, setScreen, activeAction, businesses, proposals } = useGame();
+  const { screen, setScreen, activeAction, businesses } = useGame();
 
   // Verifica se há algum negócio pronto para coletar
   const now = Date.now();
   const hasReadyBusiness = businesses.some(b => now >= new Date(b.next_collection_at).getTime());
-  const pendingProposalsCount = proposals.filter(p => p.status === 'pending').length;
 
   const navItems: NavItem[] = [
     { id: 'dashboard', label: 'Início', icon: Home },
@@ -35,14 +33,7 @@ export const BottomNav: React.FC = () => {
       badge: Boolean(activeAction) 
     },
     { id: 'map', label: 'Mapa', icon: MapPin },
-    { id: 'market', label: 'Mercado', icon: Store },
-    { id: 'newspaper', label: 'Gazeta', icon: Newspaper },
-    { 
-      id: 'family', 
-      label: 'Famílias', 
-      icon: Users, 
-      badge: pendingProposalsCount > 0 ? pendingProposalsCount : false 
-    }
+    { id: 'market', label: 'Mercado', icon: Store }
   ];
 
   return (

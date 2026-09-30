@@ -108,20 +108,24 @@ export const GameImage: React.FC<GameImageProps> = ({
         )}
       </div>
 
-      {/* 2. Fotografia Temática (Carregada com no-referrer para contornar bloqueios) */}
-      {src && !hasError && (
-        <img
-          src={src}
-          alt={alt}
-          loading="lazy"
-          referrerPolicy="no-referrer"
-          onLoad={() => setIsLoaded(true)}
-          onError={() => setHasError(true)}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
-            isLoaded ? 'opacity-70' : 'opacity-0'
-          }`}
-        />
-      )}
+      {/* 2. Fotografia Temática ou Ilustração Pixel Art */}
+      {src && !hasError && (() => {
+        const isPixelArt = src.startsWith('/images/') || src.includes('pixel') || src.includes('preso_cafe');
+        return (
+          <img
+            src={src}
+            alt={alt}
+            loading="lazy"
+            referrerPolicy="no-referrer"
+            onLoad={() => setIsLoaded(true)}
+            onError={() => setHasError(true)}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+              isLoaded ? (isPixelArt ? 'opacity-95' : 'opacity-70') : 'opacity-0'
+            }`}
+            style={{ imageRendering: isPixelArt ? 'pixelated' : 'auto' }}
+          />
+        );
+      })()}
 
       {/* 3. Vinheta e Sombra para Contraste de Texto */}
       <div className="absolute inset-0 bg-gradient-to-t from-noir-950/90 via-noir-950/30 to-transparent pointer-events-none" />

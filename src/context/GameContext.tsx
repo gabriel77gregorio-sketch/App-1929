@@ -47,6 +47,8 @@ interface GameContextType {
   events: GameEvent[];
   offlineSummary: OfflineSummary | null;
   dismissOfflineModal: () => void;
+  completedActionReport: PlayerAction | null;
+  dismissActionReport: () => void;
   notifications: GameNotification[];
   notify: (message: string, type?: 'success' | 'warning' | 'error' | 'info') => void;
   
@@ -122,6 +124,11 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [playerDefense, setPlayerDefense] = useState<PlayerDefense>({ guards_count: 1, safe_level: 1 });
   const [season, setSeason] = useState<SeasonData>(rivalService.getSeasonData());
   const [referralData, setReferralData] = useState<ReferralData>(referralService.getReferralData());
+  const [completedActionReport, setCompletedActionReport] = useState<PlayerAction | null>(null);
+
+  const dismissActionReport = useCallback(() => {
+    setCompletedActionReport(null);
+  }, []);
 
   const notify = useCallback((message: string, type: 'success' | 'warning' | 'error' | 'info' = 'info') => {
     const id = 'notif-' + Date.now() + '-' + Math.random();
@@ -327,6 +334,9 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (res.success && res.character) {
       setCharacter(res.character);
       reloadData();
+      if (res.action) {
+        setCompletedActionReport(res.action);
+      }
       if (res.outcome === 'sucesso_total') {
         notify(res.message, 'success');
       } else if (res.outcome === 'sucesso_parcial') {
@@ -690,6 +700,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         events,
         offlineSummary,
         dismissOfflineModal,
+        completedActionReport,
+        dismissActionReport,
         notifications,
         notify,
         createCharacter,

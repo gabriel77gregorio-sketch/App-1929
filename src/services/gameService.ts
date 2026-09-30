@@ -407,7 +407,11 @@ export const gameService = {
       rewardRespect = atype.reward_respect;
       rewardInfluence = atype.reward_influence;
       rewardFear = atype.reward_fear;
-      notes = 'A operação transcorreu com precisão cirúrgica. Nenhum rastro deixado para a polícia.';
+      if (atype.slug === 'transporte_fardo') {
+        notes = 'O carregamento de café desceu a serra sob a névoa sem levantar qualquer suspeita dos fiscais.';
+      } else {
+        notes = 'A operação transcorreu com precisão cirúrgica. Nenhum rastro deixado para a polícia.';
+      }
     } else if (roll <= successChance + 18) {
       // Sucesso Parcial
       outcome = 'sucesso_parcial';
@@ -415,15 +419,23 @@ export const gameService = {
       rewardRespect = Math.max(1, atype.reward_respect - 1);
       rewardInfluence = Math.max(0, atype.reward_influence - 1);
       rewardFear = atype.reward_fear + 2; // Chamou atenção
-      notes = 'O objetivo foi cumprido, porém houve contratempos e olhares curiosos dos moradores.';
+      if (atype.slug === 'transporte_fardo') {
+        notes = 'As sacas de café foram descarregadas, mas uma patrulha da delegacia avistou a movimentação suspeita.';
+      } else {
+        notes = 'O objetivo foi cumprido, porém houve contratempos e olhares curiosos dos moradores.';
+      }
     } else {
       // Fracasso
       outcome = 'fracasso';
       rewardMoney = 0;
       rewardRespect = 0;
       rewardInfluence = 0;
-      rewardFear = 1;
-      notes = 'A movimentação falhou. Os capangas tiveram que recuar para não serem apanhados em flagrante.';
+      rewardFear = 2;
+      if (atype.slug === 'transporte_fardo') {
+        notes = "Você foi preso roubando café! O 'Rei do Grão' de 1929 agora mofa na cadeia.";
+      } else {
+        notes = 'A movimentação falhou. Os capangas tiveram que recuar para não serem apanhados em flagrante.';
+      }
     }
 
     act.status = 'completed';
