@@ -11,7 +11,7 @@ export const INITIAL_DISTRICTS: District[] = [
     police_presence: 75,
     base_risk: 25,
     icon: 'landmark',
-    illustration: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?w=600&q=80&fit=crop'
+    illustration: '/images/districts/centro.jpg'
   },
   {
     id: '11111111-1111-1111-1111-111111111102',
@@ -23,7 +23,7 @@ export const INITIAL_DISTRICTS: District[] = [
     police_presence: 65,
     base_risk: 45,
     icon: 'ship',
-    illustration: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80&fit=crop'
+    illustration: '/images/districts/porto.jpg'
   },
   {
     id: '11111111-1111-1111-1111-111111111103',
@@ -35,7 +35,7 @@ export const INITIAL_DISTRICTS: District[] = [
     police_presence: 50,
     base_risk: 30,
     icon: 'train',
-    illustration: 'https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=600&q=80&fit=crop'
+    illustration: '/images/districts/estacao.jpg'
   },
   {
     id: '11111111-1111-1111-1111-111111111104',
@@ -47,7 +47,7 @@ export const INITIAL_DISTRICTS: District[] = [
     police_presence: 40,
     base_risk: 50,
     icon: 'wine',
-    illustration: 'https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=600&q=80&fit=crop'
+    illustration: '/images/districts/boemio.jpg'
   },
   {
     id: '11111111-1111-1111-1111-111111111105',
@@ -59,7 +59,7 @@ export const INITIAL_DISTRICTS: District[] = [
     police_presence: 30,
     base_risk: 40,
     icon: 'wrench',
-    illustration: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600&q=80&fit=crop'
+    illustration: '/images/districts/suburbio.jpg'
   },
   {
     id: '11111111-1111-1111-1111-111111111106',
@@ -71,7 +71,7 @@ export const INITIAL_DISTRICTS: District[] = [
     police_presence: 45,
     base_risk: 35,
     icon: 'trees',
-    illustration: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&q=80&fit=crop'
+    illustration: '/images/districts/interior.jpg'
   }
 ];
 
@@ -88,7 +88,7 @@ export const INITIAL_BUSINESS_TYPES: BusinessType[] = [
     icon: 'beer',
     min_level: 1,
     flavor_quote: 'Um copo de cachaça boa desata línguas e enche a gaveta.',
-    illustration: 'https://images.unsplash.com/photo-1543007630-9710e4a00a20?w=600&q=80&fit=crop'
+    illustration: '/images/businesses/bar.jpg'
   },
   {
     id: '22222222-2222-2222-2222-222222222202',
@@ -102,7 +102,7 @@ export const INITIAL_BUSINESS_TYPES: BusinessType[] = [
     icon: 'tool',
     min_level: 2,
     flavor_quote: 'O barulho dos motores e marretas abafa qualquer conversa sigilosa.',
-    illustration: 'https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=600&q=80&fit=crop'
+    illustration: '/images/businesses/oficina.jpg'
   },
   {
     id: '22222222-2222-2222-2222-222222222203',
@@ -116,7 +116,7 @@ export const INITIAL_BUSINESS_TYPES: BusinessType[] = [
     icon: 'warehouse',
     min_level: 2,
     flavor_quote: 'Se está trancado sob cadeado no armazém, ninguém faz perguntas.',
-    illustration: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600&q=80&fit=crop'
+    illustration: '/images/businesses/armazem.jpg'
   },
   {
     id: '22222222-2222-2222-2222-222222222204',
@@ -130,7 +130,7 @@ export const INITIAL_BUSINESS_TYPES: BusinessType[] = [
     icon: 'coffee',
     min_level: 3,
     flavor_quote: 'O café dita o pulso financeiro dos grandes homens de Santa Augusta.',
-    illustration: 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=600&q=80&fit=crop'
+    illustration: '/images/businesses/cafe.jpg'
   },
   {
     id: '22222222-2222-2222-2222-222222222205',
@@ -144,7 +144,7 @@ export const INITIAL_BUSINESS_TYPES: BusinessType[] = [
     icon: 'dice',
     min_level: 4,
     flavor_quote: 'Onde nobres, deputados e damas perdem fortunas antes da alvorada.',
-    illustration: 'https://images.unsplash.com/photo-1511193311914-0346f16efe90?w=600&q=80&fit=crop'
+    illustration: '/images/businesses/cassino.jpg'
   }
 ];
 
@@ -167,7 +167,7 @@ export const INITIAL_ACTION_TYPES: ActionType[] = [
     reward_fear: 0,
     base_risk: 15,
     success_chance: 85,
-    illustration: 'https://images.unsplash.com/photo-1511920170033-f8396924c348?w=600&q=80&fit=crop',
+    illustration: '/images/actions/coletar_info.jpg',
     button_label: 'Coletar Informações'
   },
   {
@@ -188,7 +188,7 @@ export const INITIAL_ACTION_TYPES: ActionType[] = [
     reward_fear: 2,
     base_risk: 30,
     success_chance: 75,
-    illustration: '/images/actions/preso_cafe.jpg',
+    illustration: '/images/actions/desvio_cafe.jpg',
     button_label: 'Desviar Carga de Café'
   },
   {
@@ -209,7 +209,7 @@ export const INITIAL_ACTION_TYPES: ActionType[] = [
     reward_fear: 4,
     base_risk: 35,
     success_chance: 72,
-    illustration: 'https://images.unsplash.com/photo-1509803874385-db7c23652552?w=600&q=80&fit=crop',
+    illustration: '/images/characters/executor.jpg',
     button_label: 'Intimidar Devedor'
   },
   {
@@ -230,7 +230,7 @@ export const INITIAL_ACTION_TYPES: ActionType[] = [
     reward_fear: 0,
     base_risk: 20,
     success_chance: 80,
-    illustration: 'https://images.unsplash.com/photo-1589994965851-a8f479c573a9?w=600&q=80&fit=crop',
+    illustration: '/images/characters/delegado_peixoto.jpg',
     button_label: 'Subornar Escrivão'
   },
   {
@@ -251,7 +251,7 @@ export const INITIAL_ACTION_TYPES: ActionType[] = [
     reward_fear: 2,
     base_risk: 40,
     success_chance: 70,
-    illustration: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80&fit=crop',
+    illustration: '/images/actions/descarregar_porto.jpg',
     button_label: 'Descarregar Contrabando'
   },
   {
@@ -272,7 +272,7 @@ export const INITIAL_ACTION_TYPES: ActionType[] = [
     reward_fear: 2,
     base_risk: 45,
     success_chance: 65,
-    illustration: 'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=600&q=80&fit=crop',
+    illustration: '/images/actions/operacao_cassino.jpg',
     button_label: 'Operar Banca de Roleta'
   },
   {
@@ -293,7 +293,7 @@ export const INITIAL_ACTION_TYPES: ActionType[] = [
     reward_fear: 0,
     base_risk: 25,
     success_chance: 78,
-    illustration: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&q=80&fit=crop',
+    illustration: '/images/actions/transporte_estacao.jpg',
     button_label: 'Interceptar Telegramas'
   },
   {
@@ -314,7 +314,7 @@ export const INITIAL_ACTION_TYPES: ActionType[] = [
     reward_fear: 5,
     base_risk: 35,
     success_chance: 72,
-    illustration: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=600&q=80&fit=crop',
+    illustration: '/images/actions/pedagio_carrocas.jpg',
     button_label: 'Cobrar Pedágio'
   }
 ];

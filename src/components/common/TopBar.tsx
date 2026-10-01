@@ -87,8 +87,17 @@ export const TopBar: React.FC = () => {
             <span className="text-[10px] text-gold-400 font-mono font-bold leading-none">
               Nv.{character.level}
             </span>
-            <div className="w-6 h-6 rounded-full bg-gradient-to-br from-gold-500/30 to-gold-600/10 border border-gold-500/30 flex items-center justify-center text-[11px] font-bold text-gold-400">
-              {character.nickname.slice(0, 1).toUpperCase()}
+            <div className="w-6 h-6 rounded-full bg-gradient-to-br from-gold-500/30 to-gold-600/10 border border-gold-500/30 flex items-center justify-center text-[11px] font-bold text-gold-400 overflow-hidden">
+              <img
+                src={`/images/characters/${character.style}.jpg`}
+                alt={character.name}
+                className="w-full h-full object-cover"
+                style={{ imageRendering: 'pixelated' }}
+                onError={(e) => {
+                  (e.target as HTMLElement).style.display = 'none';
+                }}
+              />
+              <span className="hidden only:inline">{character.nickname.slice(0, 1).toUpperCase()}</span>
             </div>
           </button>
 

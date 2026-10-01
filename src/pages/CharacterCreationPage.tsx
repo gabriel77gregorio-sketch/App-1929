@@ -19,6 +19,7 @@ interface StyleOption {
   bonus: string;
   description: string;
   icon: React.ElementType;
+  image: string;
 }
 
 const STYLE_OPTIONS: StyleOption[] = [
@@ -27,28 +28,32 @@ const STYLE_OPTIONS: StyleOption[] = [
     title: 'Empresário',
     bonus: '+15% de receita contínua e 10% de desconto em novos alvarás',
     description: 'Você sabe como lavar o dinheiro da noite em balcões respeitáveis e abrir portas no comércio oficial.',
-    icon: TrendingUp
+    icon: TrendingUp,
+    image: '/images/characters/empresario.jpg'
   },
   {
     id: 'negociador',
     title: 'Negociador',
     bonus: '+10% em negociações e maior reserva de Influência política',
     description: 'Palavras afiadas e contatos nos clubes certos resolvem conflitos antes que uma bala precise ser disparada.',
-    icon: Briefcase
+    icon: Briefcase,
+    image: '/images/characters/negociador.jpg'
   },
   {
     id: 'contrabandista',
     title: 'Contrabandista',
     bonus: '+10% em transporte e sucesso ampliado nas docas',
     description: 'Você conhece cada escaler e armazém do cais. Se algo chega do mar sem manifesto, passa pelas suas mãos.',
-    icon: Anchor
+    icon: Anchor,
+    image: '/images/characters/contrabandista.jpg'
   },
   {
     id: 'executor',
     title: 'Executor',
     bonus: '+12% em intimidações e maior índice de Medo nas ruas',
     description: 'O silêncio em Santa Augusta é imposto pelo peso da mão. Quem deve, paga; quem vacila, desaparece.',
-    icon: Crosshair
+    icon: Crosshair,
+    image: '/images/characters/executor.jpg'
   }
 ];
 
@@ -757,6 +762,23 @@ export const CharacterCreationPage: React.FC = () => {
                     }`}
                   >
                     <div>
+                      {/* Retrato do Arquétipo em Pixel Art */}
+                      <div className="relative w-full h-32 rounded overflow-hidden mb-2 border border-noir-700 bg-noir-950">
+                        <img
+                          src={opt.image}
+                          alt={opt.title}
+                          className="w-full h-full object-cover"
+                          style={{ imageRendering: 'pixelated' }}
+                        />
+                        <div className="absolute top-2 right-2">
+                          {isSelected && (
+                            <span className="bg-gold-500 text-noir-950 font-mono text-[9px] font-black px-1.5 py-0.5 rounded shadow">
+                              ✓ SELECIONADO
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
                       <div className="flex items-center justify-between mb-1.5">
                         <div className="flex items-center gap-2">
                           <div className={`p-1.5 rounded ${isSelected ? 'bg-gold-500 text-noir-950 font-bold' : 'bg-noir-700 text-gold-400'}`}>
@@ -766,7 +788,6 @@ export const CharacterCreationPage: React.FC = () => {
                             {opt.title}
                           </span>
                         </div>
-                        {isSelected && <span className="text-gold-400 font-mono text-[10px] font-bold">✓ Ativo</span>}
                       </div>
                       <p className="text-[11px] text-noir-300 font-serif italic leading-relaxed">
                         {opt.description}
@@ -802,12 +823,15 @@ export const CharacterCreationPage: React.FC = () => {
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs">
               {INITIAL_DISTRICTS.map((dist) => (
-                <div key={dist.id} className="p-3 bg-noir-850/90 rounded border border-noir-750 space-y-1.5 flex flex-col justify-between">
+                <div key={dist.id} className="p-2.5 bg-noir-850/90 rounded border border-noir-750 space-y-1.5 flex flex-col justify-between overflow-hidden">
                   <div>
-                    <span className="font-serif-vintage font-bold text-sm text-gold-400 block truncate">
+                    <div className="w-full h-16 rounded overflow-hidden mb-1.5 border border-noir-750 bg-noir-950">
+                      <img src={dist.illustration} alt={dist.name} className="w-full h-full object-cover" style={{ imageRendering: 'pixelated' }} />
+                    </div>
+                    <span className="font-serif-vintage font-bold text-xs sm:text-sm text-gold-400 block truncate">
                       {dist.name}
                     </span>
-                    <p className="text-[10px] text-noir-400 font-serif italic line-clamp-2 mt-0.5">
+                    <p className="text-[10px] text-noir-400 font-serif italic line-clamp-1 mt-0.5">
                       "{dist.tagline}"
                     </p>
                   </div>
@@ -907,6 +931,9 @@ export const CharacterCreationPage: React.FC = () => {
                     }`}
                   >
                     <div>
+                      <div className="w-full h-16 rounded overflow-hidden mb-2 border border-noir-700 bg-noir-950">
+                        <img src={d.illustration} alt={d.name} className="w-full h-full object-cover" style={{ imageRendering: 'pixelated' }} />
+                      </div>
                       <div className="flex items-center justify-between">
                         <span className="font-serif-vintage font-bold text-sm text-paper-100">
                           {d.name}

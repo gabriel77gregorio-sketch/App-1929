@@ -33,18 +33,30 @@ export const DashboardPage: React.FC = () => {
   return (
     <div className="max-w-2xl mx-auto px-4 py-3 space-y-4 pb-24">
       {/* 1. Header do Império */}
-      <div className="bg-noir-900 border border-noir-750 rounded-lg p-3 relative overflow-hidden">
-        <div className="flex items-center justify-between">
+      <div className="bg-noir-900 border border-noir-750 rounded-lg p-3 relative overflow-hidden flex items-center gap-3">
+        <div className="w-14 h-14 rounded-lg overflow-hidden shrink-0 border border-gold-500/40 bg-noir-950 shadow">
+          <img
+            src={`/images/characters/${character.style}.jpg`}
+            alt={character.name}
+            className="w-full h-full object-cover"
+            style={{ imageRendering: 'pixelated' }}
+            onError={(e) => {
+              (e.target as HTMLElement).style.display = 'none';
+            }}
+          />
+        </div>
+
+        <div className="flex-1 min-w-0 flex items-center justify-between">
           <div>
-            <h2 className="font-display text-xl sm:text-2xl font-black text-paper-100">
+            <h2 className="font-display text-lg sm:text-xl font-black text-paper-100 truncate">
               {character.name}
             </h2>
-            <p className="text-xs text-gold-400 font-serif italic">
+            <p className="text-xs text-gold-400 font-serif italic truncate">
               "{character.nickname}" • {character.origin}
             </p>
           </div>
 
-          <div className="text-right">
+          <div className="text-right shrink-0">
             <span className="text-[10px] uppercase font-mono text-noir-400 block">Nível {character.level}</span>
             <div className="font-serif-vintage text-xs sm:text-sm font-bold text-gold-400">
               {character.level === 1 && 'Aspirante'}
