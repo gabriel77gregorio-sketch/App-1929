@@ -356,4 +356,21 @@ export interface ReferralData {
   milestone_claimed: boolean;
 }
 
+// === SISTEMA DE CHAT: "A BOCA — TELEGRAMA DO SUBMUNDO" ===
 
+export type ChatMessageType = 'player' | 'system' | 'npc';
+export type ChatChannel = 'geral' | string; // 'geral' | 'familia_{id}'
+
+export interface ChatMessage {
+  id: string;
+  character_id: string;
+  character_name: string;
+  character_nickname: string;
+  character_style: CharacterStyle;
+  character_level: number;
+  family_tag?: string | null;
+  channel: string;
+  content: string;
+  message_type: ChatMessageType;
+  created_at: string;
+}

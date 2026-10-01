@@ -18,6 +18,7 @@ import { MarketPage } from './pages/MarketPage';
 import { FamilyPage } from './pages/FamilyPage';
 import { NewspaperPage } from './pages/NewspaperPage';
 import { RankingPage } from './pages/RankingPage';
+import { ChatPage } from './pages/ChatPage';
 import { AdminPage } from './pages/AdminPage';
 import { Sparkles } from 'lucide-react';
 
@@ -66,6 +67,7 @@ export const App: React.FC = () => {
         {screen === 'family' && <FamilyPage />}
         {screen === 'newspaper' && <NewspaperPage />}
         {screen === 'ranking' && <RankingPage />}
+        {screen === 'chat' && <ChatPage />}
         {screen === 'admin' && <AdminPage />}
       </main>
 

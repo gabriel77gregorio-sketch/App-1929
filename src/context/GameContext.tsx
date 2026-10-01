@@ -23,6 +23,7 @@ export type Screen =
   | 'family' 
   | 'newspaper' 
   | 'ranking'
+  | 'chat'
   | 'admin';
 
 interface GameNotification {

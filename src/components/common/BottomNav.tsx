@@ -1,7 +1,7 @@
 import React from 'react';
 import { useGame, Screen } from '../../context/GameContext';
 import { 
-  Building2, Crosshair, MapPin, Store, Home 
+  Building2, Crosshair, MapPin, Store, Home, MessageCircle 
 } from 'lucide-react';
 
 interface NavItem {
@@ -32,6 +32,7 @@ export const BottomNav: React.FC = () => {
       icon: Crosshair, 
       badge: Boolean(activeAction) 
     },
+    { id: 'chat', label: 'Chat', icon: MessageCircle },
     { id: 'map', label: 'Mapa', icon: MapPin },
     { id: 'market', label: 'Mercado', icon: Store }
   ];
